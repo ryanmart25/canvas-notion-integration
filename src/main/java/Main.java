@@ -16,8 +16,13 @@ public class Main {
     public static void main(String[] args) {
         Main main = new Main();
         main.launch();
+        //Scanner scanner = new Scanner(System.in);
+        //Specifies what the user would like to do.
+        // 1. "All Courses" prints a list of currently enrolled courses
+        // 2. "<name of course>" prints a list of assignments for a specific course
+        //String which = scanner.nextLine();
         main.makeRequest();
-        //System.out.println(main.getToken());
+
         main.exit();
     }
     private void launch(){
@@ -38,7 +43,8 @@ public class Main {
     private URL buildurl(){
         URL url;
         try {
-            url = new URL("https://canvas.instructure.com/api/v1/courses");
+
+            url = new URL("https://canvas.instructure.com/api/v1/courses/112990000000112434/assignments");
         } catch (MalformedURLException e) {
             System.out.println("malformed url");
             throw new RuntimeException(e);
@@ -64,13 +70,40 @@ public class Main {
         }
 
     }
+    private String getEndpoint(String which){
+
+        EZFileReader reader = new EZFileReader((new File("src\\main\\resources\\endpoints.txt")));
+        String line;
+        which = which.toLowerCase();
+        which = which.trim();
+        while(true){
+            line = reader.readLine();
+            if(line.equals("[START]")){
+                continue;
+            }
+            else if(line.equals("[END]")){
+                return "void";
+            }
+            else{
+                if(line.contains(which)){
+                    reader.close();
+                    return line.substring(which.length() + 1);
+                }
+            }
+        }
+    }
     private void makeRequest(){
         URL url = buildurl();
         if(url!= null){
             try{
                 HttpsURLConnection con = (HttpsURLConnection)url.openConnection();
                 con.setRequestMethod("GET");
-                con.setRequestProperty("Authorization", "Bearer " + this.getToken());
+                String token = this.getToken();
+                if(token.equals("void")){
+                    System.out.println("invalid token: " + token);
+                    return;
+                }
+                con.setRequestProperty("Authorization", "Bearer " + token);
                 if(con.getResponseCode() == 200){
                     print_cert_info(con);
                     print_content(con);
