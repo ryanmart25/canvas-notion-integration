@@ -19,17 +19,20 @@ private final String[] parameters = {};
 private final String canvasToken = "11299~nX3JnXvhLLVCMYPXWEMuQrP92MneCJea9f34D8FE8XcJWtJCnVG97kYMQMUByCFU";
 private final String databaseID = "516c52da34584026a3c4b785e954349d";
 private final String notionToken = "secret_P1xfxva0V71KkN3SMvzwBGuai79BPMZGD6JqImcWeZ4";
-private final String[] courseIDs= {"112990000000084732", "112990000000093656", "112990000000114806", "112990000000104413", "112990000000113372", "112990000000106387", "112990000000084604", "112990000000112434", "112990000000089826"};
+private static final String[] courseIDs= {"112990000000124161", "112990000000093656", "112990000000114806", "112990000000104413", "112990000000113372", "112990000000106387", "112990000000084604", "112990000000112434", "112990000000089826"};
     public static void main(String[] args) {
         Main main = new Main();
-        main.launch();
         //Scanner scanner = new Scanner(System.in);
         //Specifies what the user would like to do.
         // 1. "All Courses" prints a list of currently enrolled courses
         // 2. "<name of course>" prints a list of assignments for a specific course
         //String which = scanner.nextLine();
         main.makeCoursesRequest();
-        main.makeAssignmentsRequest();
+        for (int i = 0; i < courseIDs.length; i++) {
+            ArrayList<String> compiledAssignments = main.makeAssignmentsRequest(courseIDs[i]);
+            System.out.println(compiledAssignments);
+        }
+
         main.exit();
     }
     private URL buildAssignmentRequestURL(String courseid){
@@ -41,13 +44,41 @@ private final String[] courseIDs= {"112990000000084732", "112990000000093656", "
         }
         return url;
     }
+    private ArrayList<String> makeAssignmentsRequest(String courseID) { // todo extract notion request to a seperate method | extract for-each out of method. this method should only make 1 request per course
+        // this should be archived.
+        ArrayList<String> compiledAssignments = new ArrayList<>();
+        URL url = buildAssignmentRequestURL(courseID);
+        if(url != null){
+            try{
+                HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
+                connection.setRequestMethod("GET");
+                connection.setRequestProperty("Authorization", "Bearer " + canvasToken);
+                //System.out.println("Headers: " + connection.getHeaderFields());
+                System.out.println("Assignment request Server Response Code: "+connection.getResponseCode());
+                //print_assignments(connection);
+                compiledAssignments = compileassignments(connection);
+                if(compiledAssignments.get(0).equals("failure")){
+                    System.out.println("failed to compile assignments, skipping\nLikely reason: Course is not published, or this user does not have access to this course. ");
+
+                }
+                else {
+                    return compiledAssignments;
+                }
+            } catch (IOException e) {
+                System.out.println("An error occurred: " + e.getMessage());
+            }
+        }
+
+        return compiledAssignments;
+    }
+
     private ArrayList<String> compileassignments(HttpsURLConnection con){
         ArrayList<String> failure = new ArrayList<>();
         failure.add("failed");
         if(con!=null){
             try {
                 if(con.getResponseCode() == 200){
-                    System.out.println("*****Content*****");
+                    System.out.println("*****Assignments*****");
                     BufferedReader reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
                     String input;
                     StringBuilder fullinput = new StringBuilder();
@@ -217,42 +248,14 @@ private final String[] courseIDs= {"112990000000084732", "112990000000093656", "
             throw new RuntimeException(e);
         }
     }
-    private void makeAssignmentsRequest() {
-        for(int i = 0; i < courseIDs.length; i++){
-            URL url = buildAssignmentRequestURL(courseIDs[i]);
-            if(url != null){
-                try{
-                    HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
-                    connection.setRequestMethod("GET");
-                    connection.setRequestProperty("Authorization", "Bearer " + canvasToken);
-                    //System.out.println("Headers: " + connection.getHeaderFields());
-                    System.out.println(connection.getResponseCode());
-                    //print_assignments(connection);
-                    ArrayList<String> compiledAssignments = compileassignments(connection);
-                    if(compiledAssignments.get(0).equals("failure")){
-                        System.out.println("failed to compile assignments, skipping\nLikely reason: Course is not published, or this user does not have access to this course. ");
-
-                    }
-                    else{
-                        for(int j = 0; j < compiledAssignments.size(); j++){
-                            System.out.println("Attempting to make POST request for assignment: " + j);
-                            makeNotionPostRequest(compiledAssignments.get(j));
-                        }
-                    }
-
-                } catch (IOException e) {
-                    System.out.println("An error occurred: " + e.getMessage());
-                }
+    private void makeNotionRequests(ArrayList<String> list){
+            for(int j = 0; j < list.size(); j++){
+                System.out.println("Attempting to make POST request for assignment: " + j);
+                makeNotionPostRequest(list.get(j));
             }
         }
-    }
-
-    private void launch(){
-
-        System.out.println("Launching...");
 
 
-    }
     private String[] getParameters(){
         System.out.println("input parameters:");
         short numparams = 3;
@@ -508,7 +511,7 @@ private final String[] courseIDs= {"112990000000084732", "112990000000093656", "
         }
         return url;
     }
-    private void makeCoursesRequest(){
+    private void makeCoursesRequest(){ // get a list of courses
         URL url = buildCoursesRequestURL();
             if(url != null){
                 try{
@@ -522,8 +525,8 @@ private final String[] courseIDs= {"112990000000084732", "112990000000093656", "
                     con.setRequestProperty("Authorization", "Bearer " + token);
                     if(con.getResponseCode() == 200){
                         System.out.println("Printing courses: ");
-                        //print_courses(con);
-                        printFullCourseRequest(con);
+                        print_courses(con);
+                        //printFullCourseRequest(con);
                     }
                 } catch (IOException e) {
                     throw new RuntimeException(e);
@@ -624,7 +627,10 @@ private final String[] courseIDs= {"112990000000084732", "112990000000093656", "
                 Iterator<JSONObject> iterator = courses.iterator();
                 while(iterator.hasNext()){
                     JSONObject course = iterator.next();
-                    System.out.println("Retrieved ID for course: " + course.get("name") + ", " + course.get("id"));
+                    if(course.containsKey("access_restricted_by_date"))
+                        System.out.printf("Course: %d\t Access is restricted by date.\n", (long) course.get("id"));
+                    else
+                        System.out.println("Retrieved ID for course: " + course.get("name") + ", " + course.get("id"));
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);

@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="0c76ec5c-439c-4475-8f35-d13a6a8e94c9" name="Changes" comment="Added library: JSONSimple">
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/json_simple_1_1_1.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/DatabaseInterface.java" afterDir="false" />
+    <list default="true" id="0c76ec5c-439c-4475-8f35-d13a6a8e94c9" name="Changes" comment="restarted work">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/sensitives.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/sensitives.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -97,7 +94,14 @@
       <option name="project" value="LOCAL" />
       <updated>1723927544152</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="restarted work">
+      <created>1733856875626</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1733856875626</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -116,7 +120,8 @@
     <MESSAGE value="Created EZFileReader. Does as advertised." />
     <MESSAGE value="Created method getEndpoint. A means of retrieving a desired endpoint from a text file. Added basic validation of token." />
     <MESSAGE value="Added library: JSONSimple" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added library: JSONSimple" />
+    <MESSAGE value="restarted work" />
+    <option name="LAST_COMMIT_MESSAGE" value="restarted work" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -127,7 +132,7 @@
         </breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/Main.java</url>
-          <line>180</line>
+          <line>211</line>
           <option name="timeStamp" value="2" />
         </line-breakpoint>
       </breakpoints>
