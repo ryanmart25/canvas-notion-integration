@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="0c76ec5c-439c-4475-8f35-d13a6a8e94c9" name="Changes" comment="restarted work">
+    <list default="true" id="0c76ec5c-439c-4475-8f35-d13a6a8e94c9" name="Changes" comment="attempting to refactor code to be more explicit and clear">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Main.java" afterDir="false" />
     </list>
@@ -21,6 +21,11 @@
     </option>
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="master" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="MarkdownSettingsMigration">
@@ -101,7 +106,14 @@
       <option name="project" value="LOCAL" />
       <updated>1733856875626</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="attempting to refactor code to be more explicit and clear">
+      <created>1733885167964</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1733885167964</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -121,7 +133,8 @@
     <MESSAGE value="Created method getEndpoint. A means of retrieving a desired endpoint from a text file. Added basic validation of token." />
     <MESSAGE value="Added library: JSONSimple" />
     <MESSAGE value="restarted work" />
-    <option name="LAST_COMMIT_MESSAGE" value="restarted work" />
+    <MESSAGE value="attempting to refactor code to be more explicit and clear" />
+    <option name="LAST_COMMIT_MESSAGE" value="attempting to refactor code to be more explicit and clear" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -132,7 +145,7 @@
         </breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/Main.java</url>
-          <line>211</line>
+          <line>279</line>
           <option name="timeStamp" value="2" />
         </line-breakpoint>
       </breakpoints>

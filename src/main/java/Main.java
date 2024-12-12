@@ -8,6 +8,7 @@ import java.security.cert.Certificate;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Scanner;
+import java.util.SimpleTimeZone;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -20,7 +21,12 @@ private final String canvasToken = "11299~nX3JnXvhLLVCMYPXWEMuQrP92MneCJea9f34D8
 private final String databaseID = "516c52da34584026a3c4b785e954349d";
 private final String notionToken = "secret_P1xfxva0V71KkN3SMvzwBGuai79BPMZGD6JqImcWeZ4";
 private static final String[] courseIDs= {"112990000000124161", "112990000000093656", "112990000000114806", "112990000000104413", "112990000000113372", "112990000000106387", "112990000000084604", "112990000000112434", "112990000000089826"};
+
+private boolean debugMode = false;
     public static void main(String[] args) {
+        if(args != null){
+            System.out.println("args isn't null");
+        }
         Main main = new Main();
         //Scanner scanner = new Scanner(System.in);
         //Specifies what the user would like to do.
@@ -29,8 +35,14 @@ private static final String[] courseIDs= {"112990000000124161", "112990000000093
         //String which = scanner.nextLine();
         main.makeCoursesRequest();
         for (int i = 0; i < courseIDs.length; i++) {
-            ArrayList<String> compiledAssignments = main.makeAssignmentsRequest(courseIDs[i]);
-            System.out.println(compiledAssignments);
+            URL url = main.buildAssignmentRequestURL(courseIDs[i]);
+            InputStream inputStream = main.makeAssignmentRequest(url);
+            if(inputStream == null){ // feels like a shitty way to do this
+                continue;
+            }
+            String request =  main.readAssignmentRequest(inputStream);
+            System.out.println(main.parseAssignment(request));
+            //System.out.println(compiledAssignments);
         }
 
         main.exit();
@@ -44,6 +56,60 @@ private static final String[] courseIDs= {"112990000000124161", "112990000000093
         }
         return url;
     }
+    private InputStream  makeAssignmentRequest(URL url){
+
+        try {
+            HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+            connection.setRequestProperty("Authorization", "Bearer " + canvasToken);
+            if(connection.getResponseCode() == 200){
+                InputStream stream = connection.getInputStream();
+
+                return stream;
+            }else{
+                System.out.println("Assignment Request: Server Responded with: " + connection.getResponseCode() + "\n" + connection.getResponseMessage());
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return null;
+    }
+    private String readAssignmentRequest(InputStream is)  { // research needed on how to best handle the stream.
+      BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+      String input;
+      StringBuilder fullinput = new StringBuilder();
+      try {
+          while ((input = reader.readLine()) != null) {
+              fullinput.append(input);
+
+          }
+          reader.close();
+      }catch (IOException e){
+          System.out.println("Failed to read from request stream.\nReason: " + e.getMessage());
+
+      }
+      return fullinput.toString();
+    }
+    private String parseAssignment(String unparsed){ // change to output a json array of assignment objects
+        JSONParser parser = new JSONParser();
+        StringBuilder assignmentOutput = new StringBuilder();
+        try {
+            JSONArray array = (JSONArray) parser.parse(unparsed);
+            Iterator<JSONObject> iterator = array.iterator();
+            while(iterator.hasNext()){
+                JSONObject assignment = iterator.next();
+                assignmentOutput.append("Assignment Name: " +  assignment.get("name"));
+                assignmentOutput.append("\nAssignment Description: " + assignment.get("description"));
+                assignmentOutput.append("\nAssignment Due Date: " + assignment.get("due_at"));
+                assignmentOutput.append("\n\n\n");
+            }
+            return assignmentOutput.toString();
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+    /*
     private ArrayList<String> makeAssignmentsRequest(String courseID) { // todo extract notion request to a seperate method | extract for-each out of method. this method should only make 1 request per course
         // this should be archived.
         ArrayList<String> compiledAssignments = new ArrayList<>();
@@ -71,6 +137,7 @@ private static final String[] courseIDs= {"112990000000124161", "112990000000093
 
         return compiledAssignments;
     }
+    */
 
     private ArrayList<String> compileassignments(HttpsURLConnection con){
         ArrayList<String> failure = new ArrayList<>();
@@ -87,6 +154,7 @@ private static final String[] courseIDs= {"112990000000124161", "112990000000093
                         fullinput.append(input);
                     }
                     reader.close();
+                    con.disconnect();
                     JSONArray array = (JSONArray) parser.parse(fullinput.toString());
                     Iterator<JSONObject> iterator = array.iterator();
                     ArrayList<String> assignments_out = new ArrayList<>();
