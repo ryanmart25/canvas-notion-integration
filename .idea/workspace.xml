@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="0c76ec5c-439c-4475-8f35-d13a6a8e94c9" name="Changes" comment="begin notion work">
+    <list default="true" id="0c76ec5c-439c-4475-8f35-d13a6a8e94c9" name="Changes" comment="building assignment post request payload">
+      <change afterPath="$PROJECT_DIR$/src/main/java/json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Main.java" afterDir="false" />
     </list>
@@ -58,8 +59,8 @@
       <recent name="main.java" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\timef\Documents\Workspaces\Java\canvas-api\src\main\resources" />
       <recent name="C:\Users\timef\Documents\Workspaces\Java\canvas-api\src\main\java" />
+      <recent name="C:\Users\timef\Documents\Workspaces\Java\canvas-api\src\main\resources" />
     </key>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
@@ -127,7 +128,14 @@
       <option name="project" value="LOCAL" />
       <updated>1734050581038</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="building assignment post request payload">
+      <created>1734062290704</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1734062290704</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -150,7 +158,8 @@
     <MESSAGE value="attempting to refactor code to be more explicit and clear" />
     <MESSAGE value="still refactoring." />
     <MESSAGE value="begin notion work" />
-    <option name="LAST_COMMIT_MESSAGE" value="begin notion work" />
+    <MESSAGE value="building assignment post request payload" />
+    <option name="LAST_COMMIT_MESSAGE" value="building assignment post request payload" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -161,7 +170,7 @@
         </breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/Main.java</url>
-          <line>297</line>
+          <line>294</line>
           <option name="timeStamp" value="2" />
         </line-breakpoint>
       </breakpoints>

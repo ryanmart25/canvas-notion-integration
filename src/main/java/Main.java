@@ -88,7 +88,7 @@ private boolean debugMode = false;
       }
       return fullinput.toString();
     }
-    private String parseAssignment(String unparsed){ //todo  change to output a json array of assignment objects
+    private String parseAssignment(String unparsed){ //
         JSONParser parser = new JSONParser();
         StringBuilder assignmentOutput = new StringBuilder();
 
@@ -98,7 +98,7 @@ private boolean debugMode = false;
             while(iterator.hasNext()){
                 // build a string. It will contain the properties.
                 JSONObject assignment = iterator.next();
-                String propertiesObject =
+                assignmentOutput.append(
                         "\"properties\": {" +
                                 "\"Name\": {" +
                                     "\"title\": [" +
@@ -134,12 +134,9 @@ private boolean debugMode = false;
                                         "}" +
                                     "]" +
                                 "}"+
-                           "}";
+                           "}");
                                                         //		    	"text": {
-                assignmentOutput.append("Assignment Name: " +  assignment.get("name"));                     //		    		"content": "Tuscan Kale"
-                assignmentOutput.append("\nAssignment Description: " + assignment.get("description"));      //		    	}
-                assignmentOutput.append("\nAssignment Due Date: " + assignment.get("due_at"));              //		    }
-                assignmentOutput.append("\n\n\n");                                                          //		]
+                                                         //		]
             }                                                                                               //		},
             return assignmentOutput.toString();
         } catch (ParseException e) {
