@@ -5,13 +5,11 @@ import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.cert.Certificate;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Scanner;
-import java.util.SimpleTimeZone;
+import java.util.*;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
@@ -21,7 +19,7 @@ private final String canvasToken = "11299~nX3JnXvhLLVCMYPXWEMuQrP92MneCJea9f34D8
 private final String databaseID = "516c52da34584026a3c4b785e954349d";
 private final String notionToken = "secret_P1xfxva0V71KkN3SMvzwBGuai79BPMZGD6JqImcWeZ4";
 private static final String[] courseIDs= {"112990000000124161", "112990000000093656", "112990000000114806", "112990000000104413", "112990000000113372", "112990000000106387", "112990000000084604", "112990000000112434", "112990000000089826"};
-
+private Map<String, String> courseMap;
 private boolean debugMode = false;
     public static void main(String[] args) {
         if(args != null){
@@ -87,58 +85,77 @@ private boolean debugMode = false;
           reader.close();
       }catch (IOException e){
           System.out.println("Failed to read from request stream.\nReason: " + e.getMessage());
-
       }
       return fullinput.toString();
     }
     private String parseAssignment(String unparsed){ //todo  change to output a json array of assignment objects
         JSONParser parser = new JSONParser();
         StringBuilder assignmentOutput = new StringBuilder();
+
         try {
             JSONArray array = (JSONArray) parser.parse(unparsed);
             Iterator<JSONObject> iterator = array.iterator();
             while(iterator.hasNext()){
+                // build a string. It will contain the properties.
                 JSONObject assignment = iterator.next();
-                assignmentOutput.append("Assignment Name: " +  assignment.get("name"));
-                assignmentOutput.append("\nAssignment Description: " + assignment.get("description"));
-                assignmentOutput.append("\nAssignment Due Date: " + assignment.get("due_at"));
-                assignmentOutput.append("\n\n\n");
-            }
+                String propertiesObject =
+                        "\"properties\": {" +
+                                "\"Name\": {" +
+                                    "\"title\": [" +
+                                        "{" +
+                                "           \"text\": {\"content\": "+assignment.get("name")+"}" +
+                                "        }" +
+                                "       ]" +
+                                "}," +
+                                "\"Notes\": {"+
+                                    "\"rich_text\": [{"+
+                                            "{"+
+                                                "\"text\": {"+
+                                                        "\"content\": \"A dark green leafy vegetable\"" +
+                                                    "}"+
+                                            "}"+
+			                        "]"+
+                                "},"+
+                                "\"Course\": {" +
+                                    "\"select\": {" +
+                                        "\"name\": \""+courseMap.get(Long.toString((long)assignment.get("course_id")))+"\"" +
+                                    "}" +
+                                "},"+
+                                "\"Due date\": {" +
+                                    "\"date\": {\"" +
+                                        "\"start\": \""+assignment.get("unlock_at")+"\"," +
+                                        "\"end\": \""+assignment.get("due_at")+ "\""+
+                                    "}" +
+                                "},"+
+                                "\"Task\": {" +
+                                    "\"multi_select\": [" +
+                                        "{" +
+                                            "\"name\": \""+resolveAssignmentType((JSONArray) assignment.get("submission_types"))+"\"" + // i am pretty sure i need to fix this to ensure it parses the array properly.
+                                        "}" +
+                                    "]" +
+                                "}"+
+                           "}";
+                                                        //		    	"text": {
+                assignmentOutput.append("Assignment Name: " +  assignment.get("name"));                     //		    		"content": "Tuscan Kale"
+                assignmentOutput.append("\nAssignment Description: " + assignment.get("description"));      //		    	}
+                assignmentOutput.append("\nAssignment Due Date: " + assignment.get("due_at"));              //		    }
+                assignmentOutput.append("\n\n\n");                                                          //		]
+            }                                                                                               //		},
             return assignmentOutput.toString();
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
-
     }
-    /*
-    private ArrayList<String> makeAssignmentsRequest(String courseID) { // todo extract notion request to a seperate method | extract for-each out of method. this method should only make 1 request per course
-        // this should be archived.
-        ArrayList<String> compiledAssignments = new ArrayList<>();
-        URL url = buildAssignmentRequestURL(courseID);
-        if(url != null){
-            try{
-                HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
-                connection.setRequestMethod("GET");
-                connection.setRequestProperty("Authorization", "Bearer " + canvasToken);
-                //System.out.println("Headers: " + connection.getHeaderFields());
-                System.out.println("Assignment request Server Response Code: "+connection.getResponseCode());
-                //print_assignments(connection);
-                compiledAssignments = compileassignments(connection);
-                if(compiledAssignments.get(0).equals("failure")){
-                    System.out.println("failed to compile assignments, skipping\nLikely reason: Course is not published, or this user does not have access to this course. ");
-
-                }
-                else {
-                    return compiledAssignments;
-                }
-            } catch (IOException e) {
-                System.out.println("An error occurred: " + e.getMessage());
-            }
+private String resolveAssignmentType(JSONArray submissionType){
+        String subs = submissionType.toString();
+        if(subs.contains("online_quiz")){
+            return "Exam";
         }
-
-        return compiledAssignments;
-    }
-    */
+        if(subs.contains("online_upload")){
+            return "Assignment";
+        }
+        return "Important date";
+}
 
     private ArrayList<String> compileassignments(HttpsURLConnection con){
         ArrayList<String> failure = new ArrayList<>();
@@ -582,68 +599,63 @@ private boolean debugMode = false;
     }
     private void makeCoursesRequest(){ // get a list of courses
         URL url = buildCoursesRequestURL();
-            if(url != null){
-                try{
-                    HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
-                    con.setRequestMethod("GET");
-                    String token = "11299~nX3JnXvhLLVCMYPXWEMuQrP92MneCJea9f34D8FE8XcJWtJCnVG97kYMQMUByCFU"; // todo replace with read from file
-                    if(token.equals("void")){
-                        System.out.println("invalid token: " + token);
-                        return;
-                    }
-                    con.setRequestProperty("Authorization", "Bearer " + token);
-                    if(con.getResponseCode() == 200){
-                        System.out.println("Printing courses: ");
-                        print_courses(con);
-                        //printFullCourseRequest(con);
-                    }
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-
-
-            }
-    }
-
-
-
-    private String makeCanvasRequest(boolean application, boolean sub){
-        //get assignment data from canvas course
-        URL url = buildurl(application, sub);
-        if(url!= null){
+        if(url != null){
             try{
-                HttpsURLConnection con = (HttpsURLConnection)url.openConnection();
+                HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
                 con.setRequestMethod("GET");
                 String token = "11299~nX3JnXvhLLVCMYPXWEMuQrP92MneCJea9f34D8FE8XcJWtJCnVG97kYMQMUByCFU"; // todo replace with read from file
                 if(token.equals("void")){
                     System.out.println("invalid token: " + token);
-                    return "void";
+                    return;
                 }
                 con.setRequestProperty("Authorization", "Bearer " + token);
                 if(con.getResponseCode() == 200){
-                    if(sub){
-                        System.out.println("Printing courses"); // print courses, then make another request to print the assignments from each course
-                        /*String[] courseids = print_courses(con);
-                        if(courseids[0].equals("void")){
-                            System.out.println("connection was closed prior to reading from input stream.");
-                        }
-
-                         */
-                    }
-                    System.out.println("Printing content: ");
-                    print_assignments(con);
-                    return formatAssignments(con);
-                }
-                else{
-                    System.out.println("Canvas request Didn't work" + "\n" + con.getResponseCode());
+                    System.out.println("Printing courses: ");
+                   this.courseMap =  mapCourseIDS(con);
+                //printFullCourseRequest(con);
                 }
             } catch (IOException e) {
-                System.out.println("Error: Server responded with: " + e);
+                throw new RuntimeException(e);
             }
         }
-        return "failed to make request to canvas.";
-
     }
+    private HashMap<String, String> mapCourseIDS(HttpsURLConnection connection){
+        if(connection!=null){
+            try {
+                System.out.println("*****Course Data*****");
+                // read full response from stream
+                BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                String input;
+                StringBuilder builder = new StringBuilder();
+                JSONParser parser = new JSONParser();
+                while((input = reader.readLine()) != null){
+                    builder.append(input);
+                }
+                reader.close();
+                connection.disconnect();
+                // parse the response, print relevant data
+                JSONArray courses = (JSONArray) parser.parse(builder.toString());
+                Iterator<JSONObject> iterator = courses.iterator();
+                HashMap<String, String> courseIDNameMap= new HashMap<>();
+                while(iterator.hasNext()){
+                    JSONObject course = iterator.next();
+                    if(course.containsKey("access_restricted_by_date"))
+                        continue;
+                    else
+                        courseIDNameMap.put(Long.toString((long)course.get("id")), (String)course.get("name"));
+                }
+                return courseIDNameMap;
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            } catch (ParseException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return null;
+    }
+
+
+
 
     private void print_cert_info(HttpsURLConnection con){
 
@@ -789,4 +801,70 @@ private boolean debugMode = false;
     private void exit(){
         System.out.println("Tearing down.");
     }
+        /*
+    private ArrayList<String> makeAssignmentsRequest(String courseID) { // todo extract notion request to a seperate method | extract for-each out of method. this method should only make 1 request per course
+        // this should be archived.
+        ArrayList<String> compiledAssignments = new ArrayList<>();
+        URL url = buildAssignmentRequestURL(courseID);
+        if(url != null){
+            try{
+                HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
+                connection.setRequestMethod("GET");
+                connection.setRequestProperty("Authorization", "Bearer " + canvasToken);
+                //System.out.println("Headers: " + connection.getHeaderFields());
+                System.out.println("Assignment request Server Response Code: "+connection.getResponseCode());
+                //print_assignments(connection);
+                compiledAssignments = compileassignments(connection);
+                if(compiledAssignments.get(0).equals("failure")){
+                    System.out.println("failed to compile assignments, skipping\nLikely reason: Course is not published, or this user does not have access to this course. ");
+
+                }
+                else {
+                    return compiledAssignments;
+                }
+            } catch (IOException e) {
+                System.out.println("An error occurred: " + e.getMessage());
+            }
+        }
+
+        return compiledAssignments;
+    }
+    */
+        private String makeCanvasRequest(boolean application, boolean sub){
+            //get assignment data from canvas course
+            URL url = buildurl(application, sub);
+            if(url!= null){
+                try{
+                    HttpsURLConnection con = (HttpsURLConnection)url.openConnection();
+                    con.setRequestMethod("GET");
+                    String token = "11299~nX3JnXvhLLVCMYPXWEMuQrP92MneCJea9f34D8FE8XcJWtJCnVG97kYMQMUByCFU"; // todo replace with read from file
+                    if(token.equals("void")){
+                        System.out.println("invalid token: " + token);
+                        return "void";
+                    }
+                    con.setRequestProperty("Authorization", "Bearer " + token);
+                    if(con.getResponseCode() == 200){
+                        if(sub){
+                            System.out.println("Printing courses"); // print courses, then make another request to print the assignments from each course
+                        /*String[] courseids = print_courses(con);
+                        if(courseids[0].equals("void")){
+                            System.out.println("connection was closed prior to reading from input stream.");
+                        }
+
+                         */
+                        }
+                        System.out.println("Printing content: ");
+                        print_assignments(con);
+                        return formatAssignments(con);
+                    }
+                    else{
+                        System.out.println("Canvas request Didn't work" + "\n" + con.getResponseCode());
+                    }
+                } catch (IOException e) {
+                    System.out.println("Error: Server responded with: " + e);
+                }
+            }
+            return "failed to make request to canvas.";
+
+        }
 }

@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="0c76ec5c-439c-4475-8f35-d13a6a8e94c9" name="Changes" comment="still refactoring.">
+    <list default="true" id="0c76ec5c-439c-4475-8f35-d13a6a8e94c9" name="Changes" comment="begin notion work">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/DatabaseInterface.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/NotionInterface.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Main.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -121,7 +120,14 @@
       <option name="project" value="LOCAL" />
       <updated>1734033355336</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="begin notion work">
+      <created>1734050581038</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1734050581038</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -143,7 +149,8 @@
     <MESSAGE value="restarted work" />
     <MESSAGE value="attempting to refactor code to be more explicit and clear" />
     <MESSAGE value="still refactoring." />
-    <option name="LAST_COMMIT_MESSAGE" value="still refactoring." />
+    <MESSAGE value="begin notion work" />
+    <option name="LAST_COMMIT_MESSAGE" value="begin notion work" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -154,7 +161,7 @@
         </breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/Main.java</url>
-          <line>280</line>
+          <line>297</line>
           <option name="timeStamp" value="2" />
         </line-breakpoint>
       </breakpoints>
