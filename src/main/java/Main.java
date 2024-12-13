@@ -68,6 +68,7 @@ private boolean debugMode = false;
                 return stream;
             }else{
                 System.out.println("Assignment Request: Server Responded with: " + connection.getResponseCode() + "\n" + connection.getResponseMessage());
+                connection.disconnect();
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -90,7 +91,7 @@ private boolean debugMode = false;
       }
       return fullinput.toString();
     }
-    private String parseAssignment(String unparsed){ // change to output a json array of assignment objects
+    private String parseAssignment(String unparsed){ //todo  change to output a json array of assignment objects
         JSONParser parser = new JSONParser();
         StringBuilder assignmentOutput = new StringBuilder();
         try {
