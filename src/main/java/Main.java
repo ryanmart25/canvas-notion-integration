@@ -1,15 +1,19 @@
 package main.java;
 
 import javax.net.ssl.HttpsURLConnection;
+import javax.print.attribute.standard.MediaSize;
 import java.io.*;
 import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.net.URL;
 import java.security.cert.Certificate;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
@@ -20,6 +24,7 @@ private final String databaseID = "516c52da34584026a3c4b785e954349d";
 private final String notionToken = "secret_P1xfxva0V71KkN3SMvzwBGuai79BPMZGD6JqImcWeZ4";
 private static final String[] courseIDs= {"112990000000124161", "112990000000093656", "112990000000114806", "112990000000104413", "112990000000113372", "112990000000106387", "112990000000084604", "112990000000112434", "112990000000089826"};
 private Map<String, String> courseMap;
+private int assignmentCount;
 private boolean debugMode = false;
     public static void main(String[] args) {
         if(args != null){
@@ -39,7 +44,13 @@ private boolean debugMode = false;
                 continue;
             }
             String request =  main.readAssignmentRequest(inputStream);
-            System.out.println(main.parseAssignment(request));
+            String[] assignmentsProperties = main.parseAssignmentProperties(request);
+            for (int j = 0; j < main.assignmentCount; j++) {
+                String notionCreatePagePayload = main.buildPageCreationPayload(assignmentsProperties[j]);
+                //System.out.println(notionCreatePagePayload);
+                main.makeNotionPageCreationRequest(main.databaseID, notionCreatePagePayload, main.notionToken);
+
+            }
             //System.out.println(compiledAssignments);
         }
 
@@ -88,60 +99,63 @@ private boolean debugMode = false;
       }
       return fullinput.toString();
     }
-    private String parseAssignment(String unparsed){ //
+    private String[] parseAssignmentProperties(String unparsed){ //
         JSONParser parser = new JSONParser();
         StringBuilder assignmentOutput = new StringBuilder();
 
         try {
             JSONArray array = (JSONArray) parser.parse(unparsed);
+            assignmentCount = array.size();
+            String[] assignments = new String[assignmentCount];
             Iterator<JSONObject> iterator = array.iterator();
+            int i = 0;
             while(iterator.hasNext()){
+
                 // build a string. It will contain the properties.
                 JSONObject assignment = iterator.next();
-                assignmentOutput.append(
-                        "\"properties\": {" +
-                                "\"Name\": {" +
-                                    "\"title\": [" +
-                                        "{" +
-                                "           \"text\": {\"content\": "+assignment.get("name")+"}" +
-                                "        }" +
-                                "       ]" +
-                                "}," +
-                                "\"Notes\": {"+
-                                    "\"rich_text\": [{"+
-                                            "{"+
-                                                "\"text\": {"+
-                                                        "\"content\": \"A dark green leafy vegetable\"" +
-                                                    "}"+
-                                            "}"+
-			                        "]"+
-                                "},"+
-                                "\"Course\": {" +
-                                    "\"select\": {" +
-                                        "\"name\": \""+courseMap.get(Long.toString((long)assignment.get("course_id")))+"\"" +
-                                    "}" +
-                                "},"+
-                                "\"Due date\": {" +
-                                    "\"date\": {\"" +
-                                        "\"start\": \""+assignment.get("unlock_at")+"\"," +
-                                        "\"end\": \""+assignment.get("due_at")+ "\""+
-                                    "}" +
-                                "},"+
-                                "\"Task\": {" +
-                                    "\"multi_select\": [" +
-                                        "{" +
-                                            "\"name\": \""+resolveAssignmentType((JSONArray) assignment.get("submission_types"))+"\"" + // i am pretty sure i need to fix this to ensure it parses the array properly.
-                                        "}" +
-                                    "]" +
-                                "}"+
-                           "}");
-                                                        //		    	"text": {
-                                                         //		]
-            }                                                                                               //		},
-            return assignmentOutput.toString();
+                // sanitize inputs
+                String unsanitizedAssignmentDescription = (String) assignment.get("description");
+                String sanitizedAssignmentDescription = unsanitizedAssignmentDescription.replaceAll("\n", "");
+                if(sanitizedAssignmentDescription.contains("\"")){
+                    sanitizedAssignmentDescription =sanitizedAssignmentDescription.replaceAll("\"", "");
+                }
+
+                String unsanitizedAssignmentStartDate = (String) assignment.get("unlock_at");
+                String sanitizedAssignmentStartDate;
+                String unsanitizedAssignmentEndDate = (String) assignment.get("due_at");
+                String sanitizedAssignmentEndDate;
+                if(unsanitizedAssignmentStartDate == null){
+                    sanitizedAssignmentStartDate = (String) assignment.get("created_at");
+                }else{
+                    sanitizedAssignmentStartDate = unsanitizedAssignmentStartDate;
+                }
+                if(unsanitizedAssignmentEndDate == null){ // set end date to the end of the year
+                    LocalDateTime now = LocalDateTime.now();
+                    LocalDateTime endOfYear = now.withMonth(12).withDayOfMonth(31);
+                    DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
+                    String formattedDate = endOfYear.format(formatter);
+                    sanitizedAssignmentEndDate = formattedDate;
+                }else{
+                    sanitizedAssignmentEndDate = unsanitizedAssignmentEndDate;
+                }
+                //System.out.println("Assignment Description: \n\n" + assignment.get("description"));
+                assignmentOutput.append("\"properties\": {\n\t" + "\"Name\": {\n\t\t" + "\"title\": [\n\t\t\t" + "{\n\t\t\t\t" + "           \"text\": {\n\t\t\t\t\t\t" + "\"content\": \"").append(assignment.get("name")).append("\"\n\t\t\t\t\t").append("}\n\t\t\t\t").append("        }").append("       ]\n\t\t\t").append("},").append("\"Notes\": {").append("\"rich_text\": [").append("{").append("\"text\": {").append("\"content\": \"").append(sanitizedAssignmentDescription).append("\"").append("}").append("}").append("]").append("},").append("\"Course\": {").append("\"select\": {").append("\"name\": \"").append(courseMap.get(Long.toString((long) assignment.get("course_id")))).append("\"").append("}").append("},").append("\"Dates\": {").append("\"date\": {").append("\"start\": \"").append(sanitizedAssignmentStartDate).append("\",").append("\"end\": \"").append(sanitizedAssignmentEndDate).append("\"").append("}").append("},").append("\"Task\": {").append("\"multi_select\": [").append("{").append("\"name\": \"").append(resolveAssignmentType((JSONArray) assignment.get("submission_types"))).append("\"").append( // i am pretty sure i need to fix this to ensure it parses the array properly.
+                        "}").append("]").append("}").append("}");
+
+                        assignments[i] = assignmentOutput.toString();
+                        assignmentOutput.delete(0, assignmentOutput.length());
+                        i++;
+            }
+            return assignments;
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
+    }
+    private String buildPageCreationPayload(String propertiesObject){
+        String payload = "{" +
+                "\"parent\": { \"database_id\": \""+this.databaseID+"\" },"+ propertiesObject + "}";
+        return payload;
+
     }
 private String resolveAssignmentType(JSONArray submissionType){
         String subs = submissionType.toString();
@@ -289,7 +303,7 @@ private String resolveAssignmentType(JSONArray submissionType){
         }
         return failure;
     }
-    private URL buildURLNotionPostRequest(String databaseID){
+    private URL buildURLNotionDatabaseQueryRequest(String databaseID){
         URL url;
         try{
             url = new URL("https://api.notion.com/v1/databases/"+databaseID+"/query");
@@ -298,9 +312,43 @@ private String resolveAssignmentType(JSONArray submissionType){
         }
         return url;
     }
-    private void makeNotionPostRequest(String payload){
+    private URL buildNotionDatabaseCreatePageRequestURL(String databaseID){
+        URL url;
+        try{
+            url = new URL("https://api.notion.com/v1/pages");
+        }catch (MalformedURLException e){
+            throw new RuntimeException(e);
+        }
+        return url;
+    }
+    private void makeNotionPageCreationRequest(String databaseID, String payload, String authenticationToken){
+        URL url = buildNotionDatabaseCreatePageRequestURL(databaseID);
+        if(url != null){
+            try{
+                HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
+                connection.setRequestMethod("POST");
+                connection.setRequestProperty("Authorization", "Bearer " + authenticationToken);
+                connection.setRequestProperty("Content-Type", "application/json");
+                connection.setRequestProperty("Notion-Version", "2022-06-28");
+                connection.setDoOutput(true);
+                writePayload(payload, connection);
+                if(connection.getResponseCode() == 200){
+                    System.out.println("Notion Database Page Creation Request: Server Responded OK");
+                    recieveResponseFromPOST(connection);
+                }else{
+                    System.out.println("Notion Page Creation Request: Server Responded: " + connection.getResponseCode() + "\t\t" + connection.getResponseMessage());
+                    System.out.println("Payload: " + payload);
+                }
+            } catch (ProtocolException e) {
+                throw new RuntimeException(e);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+    private void makeNotionDatabaseQueryRequest(String payload){
         ////queries a database to find out information on pages
-        URL url =buildURLNotionPostRequest(databaseID);
+        URL url = buildURLNotionDatabaseQueryRequest(databaseID);
         if(url != null){
             try{
                 HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
@@ -334,7 +382,7 @@ private String resolveAssignmentType(JSONArray submissionType){
     private void makeNotionRequests(ArrayList<String> list){
             for(int j = 0; j < list.size(); j++){
                 System.out.println("Attempting to make POST request for assignment: " + j);
-                makeNotionPostRequest(list.get(j));
+                makeNotionDatabaseQueryRequest(list.get(j));
             }
         }
 
@@ -574,11 +622,11 @@ private String resolveAssignmentType(JSONArray submissionType){
         return "";
     }
     private void recieveResponseFromPOST(HttpsURLConnection httpsURLConnection){
-        System.out.println("~~~ Attempting to read Server's Response to POST request~~~");
+        //System.out.println("~~~ Attempting to read Server's Response to POST request~~~");
         try(BufferedReader reader = new BufferedReader(new InputStreamReader(httpsURLConnection.getInputStream()))){
             String line;
             while((line = reader.readLine()) != null){
-                System.out.println(line);
+                //System.out.println(line);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);

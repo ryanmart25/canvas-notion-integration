@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="0c76ec5c-439c-4475-8f35-d13a6a8e94c9" name="Changes" comment="trying to fix json payload">
-      <change beforePath="$PROJECT_DIR$/src/main/java/json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/json" afterDir="false" />
+    <list default="true" id="0c76ec5c-439c-4475-8f35-d13a6a8e94c9" name="Changes" comment="trying to fix json payload 2">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Main.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -140,7 +141,14 @@
       <option name="project" value="LOCAL" />
       <updated>1734063178476</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="trying to fix json payload 2">
+      <created>1734063218343</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1734063218343</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -165,7 +173,8 @@
     <MESSAGE value="begin notion work" />
     <MESSAGE value="building assignment post request payload" />
     <MESSAGE value="trying to fix json payload" />
-    <option name="LAST_COMMIT_MESSAGE" value="trying to fix json payload" />
+    <MESSAGE value="trying to fix json payload 2" />
+    <option name="LAST_COMMIT_MESSAGE" value="trying to fix json payload 2" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -176,8 +185,13 @@
         </breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/Main.java</url>
-          <line>294</line>
+          <line>308</line>
           <option name="timeStamp" value="2" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/Main.java</url>
+          <line>45</line>
+          <option name="timeStamp" value="3" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
