@@ -1,4 +1,0 @@
-[START]
-access-token-canvas:11299~nX3JnXvhLLVCMYPXWEMuQrP92MneCJea9f34D8FE8XcJWtJCnVG97kYMQMUByCFU
-access-token-notion:secret_P1xfxva0V71KkN3SMvzwBGuai79BPMZGD6JqImcWeZ4
-[END]

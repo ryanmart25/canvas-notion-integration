@@ -1,13 +1,11 @@
 package main.java;
 
 import javax.net.ssl.HttpsURLConnection;
-import javax.print.attribute.standard.MediaSize;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.security.cert.Certificate;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -48,7 +46,7 @@ private boolean debugMode = false;
             for (int j = 0; j < main.assignmentCount; j++) {
                 String notionCreatePagePayload = main.buildPageCreationPayload(assignmentsProperties[j]);
                 //System.out.println(notionCreatePagePayload);
-                main.makeNotionPageCreationRequest(main.databaseID, notionCreatePagePayload, main.notionToken);
+                main.makeNotionPageCreationRequest(notionCreatePagePayload, main.notionToken);
 
             }
             //System.out.println(compiledAssignments);
@@ -312,7 +310,7 @@ private String resolveAssignmentType(JSONArray submissionType){
         }
         return url;
     }
-    private URL buildNotionDatabaseCreatePageRequestURL(String databaseID){
+    private URL buildNotionDatabaseCreatePageRequestURL(){
         URL url;
         try{
             url = new URL("https://api.notion.com/v1/pages");
@@ -321,8 +319,8 @@ private String resolveAssignmentType(JSONArray submissionType){
         }
         return url;
     }
-    private void makeNotionPageCreationRequest(String databaseID, String payload, String authenticationToken){
-        URL url = buildNotionDatabaseCreatePageRequestURL(databaseID);
+    private void makeNotionPageCreationRequest(String payload, String authenticationToken){
+        URL url = buildNotionDatabaseCreatePageRequestURL();
         if(url != null){
             try{
                 HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
@@ -379,26 +377,6 @@ private String resolveAssignmentType(JSONArray submissionType){
             throw new RuntimeException(e);
         }
     }
-    private void makeNotionRequests(ArrayList<String> list){
-            for(int j = 0; j < list.size(); j++){
-                System.out.println("Attempting to make POST request for assignment: " + j);
-                makeNotionDatabaseQueryRequest(list.get(j));
-            }
-        }
-
-
-    private String[] getParameters(){
-        System.out.println("input parameters:");
-        short numparams = 3;
-        String[] params = new String[numparams];
-        Scanner scan = new Scanner(System.in);
-        for(int i = 0; i < numparams;i++){
-            params[i] = scan.nextLine();
-
-        }
-        scan.close();
-        return params;
-    }
     private URL buildurl(boolean application, boolean sub){
         //application is false for canvas, true for notion
         URL url;
@@ -448,179 +426,10 @@ private String resolveAssignmentType(JSONArray submissionType){
         }
 
     }
-    private String getEndpoint(String which){
-
-        EZFileReader reader = new EZFileReader((new File("src\\main\\resources\\endpoints.txt")));
-        String line;
-        which = which.toLowerCase();
-        which = which.trim();
-        while(true){
-            line = reader.readLine();
-            if(line.equals("[START]")){
-                continue;
-            }
-            else if(line.equals("[END]")){
-                return "void";
-            }
-            else{
-                if(line.contains(which)){
-                    reader.close();
-                    return line.substring(which.length() + 1);
-                }
-            }
-        }
-    }
-    private void makeNotionGetRequest(){
-        URL url = buildurl(true, false);
-        if(url!=null){
-            try{
-                HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
-                con.setRequestMethod("GET");
-                con.setRequestProperty("Authorization", "Bearer " + notionToken);
-
-                    System.out.println("*****Content*****");
-                    if(con.getResponseCode() == 200){
-                        BufferedReader reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
-                        String input;
-
-                        while((input = reader.readLine()) != null){
-                            System.out.println(input);
-                            //   parser.parse(input);
-                        }
-                        reader.close();
-                    }else{
-                        System.out.println("Server responded with: " + con.getResponseCode());
-                    }
 
 
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-
-        }
-    }
-
-    private String formatAssignments(HttpsURLConnection con){
-        // connection should be from a request to view assignments under a particular course. This method will format the data received from the canvas into an array of Strings that will be passed to writePayload
-        if(con != null){
-            try(BufferedReader reader = new BufferedReader(new InputStreamReader(con.getInputStream()))){
-                String input;
-                StringBuilder builder = new StringBuilder();
-
-                while((input = reader.readLine()) != null){
-                    builder.append(input);
-                }
-                JSONParser parser = new JSONParser();
-                JSONArray assignments = (JSONArray) parser.parse(builder.toString());
-                Iterator<JSONObject> iterator= assignments.iterator();
-
-                StringBuilder payload = new StringBuilder();
-                while(iterator.hasNext()){
-                    JSONObject assignment = iterator.next();
-
-                    //insert assignment details into payload.
 
 
-                    builder.append("{\n" +
-                            "            \"parent\": {\n" +
-                            "                \"type\": \"database_id\",\n" +
-                            "                \"database_id\": \"516c52da-3458-4026-a3c4-b785e954349d\"\n" +//hardcoded database id
-                            "            },\n" +
-                            "            \"properties\": {\n" +
-                            "                \"Dates\": {\n" +
-                            "                    \"id\": \"0%23%7Dp\",\n" +
-                            "                    \"type\": \"date\",\n" +
-                            "                    \"date\": {\n" +
-                            "                        \"start\": \"2024-08-23\",\n" +
-                            "                        \"end\": null,\n" +
-                            "                        \"time_zone\": null\n" +
-                            "                    }\n" +
-                            "                },\n" +
-                            "                \"Task\": {\n" +
-                            "                    \"id\": \"2%3DL6\",\n" +
-                            "                    \"type\": \"multi_select\",\n" +
-                            "                    \"multi_select\": [\n" +
-                            "                        {\n" +
-                            "                            \"id\": \"e841a454-3e7c-496b-89ae-bacf2f489030\",\n" +
-                            "                            \"name\": \"Assignment\",\n" +
-                            "                            \"color\": \"brown\"\n" +
-                            "                        }\n" +
-                            "                    ]\n" +
-                            "                },\n" +
-                            "                \"Status\": {\n" +
-                            "                    \"id\": \"u%5E%60%40\",\n" +
-                            "                    \"type\": \"checkbox\",\n" +
-                            "                    \"checkbox\": false\n" +
-                            "                },\n" +
-                            "                \"Notes\": {\n" +
-                            "                    \"id\": \"v%3CK%5D\",\n" +
-                            "                    \"type\": \"rich_text\",\n" +
-                            "                    \"rich_text\": [\n" +
-                            "                        {\n" +
-                            "                            \"type\": \"text\",\n" +
-                            "                            \"text\": {\n" +
-                            "                                \"content\": \"sample text\",\n" +
-                            "                                \"link\": null\n" +
-                            "                            },\n" +
-                            "                            \"annotations\": {\n" +
-                            "                                \"bold\": false,\n" +
-                            "                                \"italic\": false,\n" +
-                            "                                \"strikethrough\": false,\n" +
-                            "                                \"underline\": false,\n" +
-                            "                                \"code\": false,\n" +
-                            "                                \"color\": \"default\"\n" +
-                            "                            },\n" +
-                            "                            \"plain_text\": \"see pages 214-213\",\n" +
-                            "                            \"href\": null\n" +
-                            "                        }\n" +
-                            "                    ]\n" +
-                            "                },\n" +
-                            "                \"Course\": {\n" +
-                            "                    \"id\": \"ysX%5E\",\n" +
-                            "                    \"type\": \"select\",\n" +
-                            "                    \"select\": {\n" +
-                            "                        \"id\": \"a8ab63c8-ae8a-4723-b983-9703856fb94f\",\n" +
-                            "                        \"name\": \"Applied Linear Algrebra\",\n" +
-                            "                        \"color\": \"red\"\n" +
-                            "                    }\n" +
-                            "                },\n" +
-                            "                \"Name\": {\n" +
-                            "                    \"id\": \"title\",\n" +
-                            "                    \"type\": \"title\",\n" +
-                            "                    \"title\": [\n" +
-                            "                        {\n" +
-                            "                            \"type\": \"text\",\n" +
-                            "                            \"text\": {\n" +
-                            "                                \"content\": \""+assignment.get("name")+"\",\n" +
-                            "                                \"link\": null\n" +
-                            "                            },\n" +
-                            "                            \"annotations\": {\n" +
-                            "                                \"bold\": false,\n" +
-                            "                                \"italic\": false,\n" +
-                            "                                \"strikethrough\": false,\n" +
-                            "                                \"underline\": false,\n" +
-                            "                                \"code\": false,\n" +
-                            "                                \"color\": \"default\"\n" +
-                            "                            },\n" +
-                            "                            \"plain_text\": \"Problem Set 1\",\n" +
-                            "                            \"href\": null\n" +
-                            "                        }\n" +
-                            "                    ]\n" +
-                            "                }\n" +
-                            "            },\n" +
-                            "            \"url\": \"https://www.notion.so/Problem-Set-1-86e95c6d602d444c8a8415e66d731d61\",\n" +
-                            "            \"public_url\": null\n" +
-                            "        },");
-                }
-                return "";
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            } catch (ParseException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        return "";
-    }
     private void recieveResponseFromPOST(HttpsURLConnection httpsURLConnection){
         //System.out.println("~~~ Attempting to read Server's Response to POST request~~~");
         try(BufferedReader reader = new BufferedReader(new InputStreamReader(httpsURLConnection.getInputStream()))){
@@ -699,41 +508,6 @@ private String resolveAssignmentType(JSONArray submissionType){
         return null;
     }
 
-
-
-
-    private void print_cert_info(HttpsURLConnection con){
-
-        if(con!=null){
-            try{
-               System.out.println("Response Code: "+ con.getResponseCode());
-               System.out.println("Authorization Header: " + con.getHeaderField("Authorization"));
-               System.out.println("Cipher Suite: " + con.getCipherSuite());
-               System.out.println("\n");
-
-                Certificate[] certs = con.getServerCertificates();
-                for (Certificate cert :
-                        certs) {
-                    System.out.println("Cert Type: " + cert.getType());
-                    System.out.println("Cert Hash Code: " + cert.hashCode());
-                    System.out.println("Cert Public Key Algorithm: " + cert.getPublicKey().getAlgorithm());
-                    System.out.println("Cert Public Key Format: " + cert.getPublicKey().getFormat());
-                }
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-
-    }
-    private String[] resize_array(String[] array){
-        int newsize  = array.length * 2;
-        String[] ret = new String[newsize];
-        for(int i = 0;  i< array.length; i++){
-            ret[i] = array[i];
-        }
-        return ret;
-
-    }
     private void print_courses(HttpsURLConnection con){
         //loads course data. Should grab IDS and insert them into a Map. id:course name.
         if(con!=null){
@@ -875,41 +649,5 @@ private String resolveAssignmentType(JSONArray submissionType){
         return compiledAssignments;
     }
     */
-        private String makeCanvasRequest(boolean application, boolean sub){
-            //get assignment data from canvas course
-            URL url = buildurl(application, sub);
-            if(url!= null){
-                try{
-                    HttpsURLConnection con = (HttpsURLConnection)url.openConnection();
-                    con.setRequestMethod("GET");
-                    String token = "11299~nX3JnXvhLLVCMYPXWEMuQrP92MneCJea9f34D8FE8XcJWtJCnVG97kYMQMUByCFU"; // todo replace with read from file
-                    if(token.equals("void")){
-                        System.out.println("invalid token: " + token);
-                        return "void";
-                    }
-                    con.setRequestProperty("Authorization", "Bearer " + token);
-                    if(con.getResponseCode() == 200){
-                        if(sub){
-                            System.out.println("Printing courses"); // print courses, then make another request to print the assignments from each course
-                        /*String[] courseids = print_courses(con);
-                        if(courseids[0].equals("void")){
-                            System.out.println("connection was closed prior to reading from input stream.");
-                        }
 
-                         */
-                        }
-                        System.out.println("Printing content: ");
-                        print_assignments(con);
-                        return formatAssignments(con);
-                    }
-                    else{
-                        System.out.println("Canvas request Didn't work" + "\n" + con.getResponseCode());
-                    }
-                } catch (IOException e) {
-                    System.out.println("Error: Server responded with: " + e);
-                }
-            }
-            return "failed to make request to canvas.";
-
-        }
 }
