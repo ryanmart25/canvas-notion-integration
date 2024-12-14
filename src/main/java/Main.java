@@ -14,21 +14,20 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-
+import io.github.cdimascio.dotenv.Dotenv;
+import io.github.cdimascio.dotenv.DotenvException;
 public class Main {
 private final String[] parameters = {};
-private final String canvasToken = "11299~nX3JnXvhLLVCMYPXWEMuQrP92MneCJea9f34D8FE8XcJWtJCnVG97kYMQMUByCFU";
-private final String databaseID = "516c52da34584026a3c4b785e954349d";
-private final String notionToken = "secret_P1xfxva0V71KkN3SMvzwBGuai79BPMZGD6JqImcWeZ4";
+private String canvasToken;
+private String databaseID;
+private String notionToken;
 private static final String[] courseIDs= {"112990000000124161", "112990000000093656", "112990000000114806", "112990000000104413", "112990000000113372", "112990000000106387", "112990000000084604", "112990000000112434", "112990000000089826"};
 private Map<String, String> courseMap;
 private int assignmentCount;
 private boolean debugMode = false;
     public static void main(String[] args) {
-        if(args != null){
-            System.out.println("args isn't null");
-        }
         Main main = new Main();
+        main.loadSecrets(main);
         //Scanner scanner = new Scanner(System.in);
         //Specifies what the user would like to do.
         // 1. "All Courses" prints a list of currently enrolled courses
@@ -53,6 +52,13 @@ private boolean debugMode = false;
         }
 
         main.exit();
+    }
+    private void loadSecrets(Main obj){
+        Dotenv dotenv = null;
+        dotenv = Dotenv.configure().load();
+        obj.canvasToken = dotenv.get("CANVASTOKEN");
+        obj.notionToken = dotenv.get("NOTIONTOKEN");
+        obj.databaseID = dotenv.get("DATABASEID");
     }
     private URL buildAssignmentRequestURL(String courseid){
         URL url;
@@ -457,7 +463,7 @@ private String resolveAssignmentType(JSONArray submissionType){
             try{
                 HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
                 con.setRequestMethod("GET");
-                String token = "11299~nX3JnXvhLLVCMYPXWEMuQrP92MneCJea9f34D8FE8XcJWtJCnVG97kYMQMUByCFU"; // todo replace with read from file
+                String token = canvasToken; // todo replace with read from file
                 if(token.equals("void")){
                     System.out.println("invalid token: " + token);
                     return;
