@@ -5,7 +5,6 @@ import java.io.*;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
-import java.security.cert.Certificate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -15,7 +14,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import io.github.cdimascio.dotenv.Dotenv;
-import io.github.cdimascio.dotenv.DotenvException;
+
 public class Main {
 private final String[] parameters = {};
 private String canvasToken;
@@ -33,7 +32,7 @@ private boolean debugMode = false;
         // 1. "All Courses" prints a list of currently enrolled courses
         // 2. "<name of course>" prints a list of assignments for a specific course
         //String which = scanner.nextLine();
-        main.makeCoursesRequest();
+        main.makeCoursesRequest(true);
         for (int i = 0; i < courseIDs.length; i++) {
             URL url = main.buildAssignmentRequestURL(courseIDs[i]);
             InputStream inputStream = main.makeAssignmentRequest(url);
@@ -447,6 +446,29 @@ private String resolveAssignmentType(JSONArray submissionType){
             throw new RuntimeException(e);
         }
     }
+    private String captureResponse(HttpsURLConnection connection){
+        StringBuilder builder = new StringBuilder();
+        String failureSignifier = "failure";
+        builder.append(failureSignifier);
+        try{
+            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String input;
+
+            while((input = reader.readLine()) != null){
+                builder.append(input);
+            }
+            reader.close();
+            connection.disconnect();
+            builder.replace(0, failureSignifier.length(), ""); // if all went well without the reading erroring out, remove the failure signifier
+
+        }catch (IOException e){
+            System.out.println(e.getMessage());
+            // Something went wrong while reading, ensure everything downstream knows it. Keep the failure signifier, remove everything else
+            if(builder.length() > failureSignifier.length())
+                builder.replace(failureSignifier.length(), builder.length(), "");
+        }
+        return builder.toString();
+    }
     private URL buildCoursesRequestURL() {
         URL url;
         try{
@@ -457,44 +479,38 @@ private String resolveAssignmentType(JSONArray submissionType){
         }
         return url;
     }
-    private void makeCoursesRequest(){ // get a list of courses
+    private void makeCoursesRequest(boolean writeCourseList){ // get a list of courses
         URL url = buildCoursesRequestURL();
         if(url != null){
             try{
                 HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
                 con.setRequestMethod("GET");
-                String token = canvasToken; // todo replace with read from file
-                if(token.equals("void")){
-                    System.out.println("invalid token: " + token);
-                    return;
-                }
+                String token = canvasToken;
                 con.setRequestProperty("Authorization", "Bearer " + token);
-                if(con.getResponseCode() == 200){
-                    System.out.println("Printing courses: ");
-                   this.courseMap =  mapCourseIDS(con);
+                String response = captureResponse(con);
+                int responseCode = con.getResponseCode();
+                con.disconnect();
+                if(responseCode == 200){
+                    if(writeCourseList){
+                        writeCourseToFile(response);
+                    }
+                   this.courseMap =  mapCourseIDS(response);
                 //printFullCourseRequest(con);
+                }else{
+                    System.out.print("Courses Request failed. Server Responded with: " + response + " ");
+                    System.out.println(response);
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
     }
-    private HashMap<String, String> mapCourseIDS(HttpsURLConnection connection){
-        if(connection!=null){
+    private HashMap<String, String> mapCourseIDS(String response){
+        if(!response.equals("failure")){
             try {
-                System.out.println("*****Course Data*****");
-                // read full response from stream
-                BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                String input;
-                StringBuilder builder = new StringBuilder();
-                JSONParser parser = new JSONParser();
-                while((input = reader.readLine()) != null){
-                    builder.append(input);
-                }
-                reader.close();
-                connection.disconnect();
                 // parse the response, print relevant data
-                JSONArray courses = (JSONArray) parser.parse(builder.toString());
+                JSONParser parser = new JSONParser();
+                JSONArray courses = (JSONArray) parser.parse(response);
                 Iterator<JSONObject> iterator = courses.iterator();
                 HashMap<String, String> courseIDNameMap= new HashMap<>();
                 while(iterator.hasNext()){
@@ -505,8 +521,6 @@ private String resolveAssignmentType(JSONArray submissionType){
                         courseIDNameMap.put(Long.toString((long)course.get("id")), (String)course.get("name"));
                 }
                 return courseIDNameMap;
-            } catch (IOException e) {
-                throw new RuntimeException(e);
             } catch (ParseException e) {
                 throw new RuntimeException(e);
             }
@@ -514,30 +528,25 @@ private String resolveAssignmentType(JSONArray submissionType){
         return null;
     }
 
-    private void print_courses(HttpsURLConnection con){
+    private void writeCourseToFile(String response){
         //loads course data. Should grab IDS and insert them into a Map. id:course name.
-        if(con!=null){
+        if(!response.equals("failure")){
             try {
-                System.out.println("*****Course Data*****");
-                // read full response from stream
-                BufferedReader reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
-                String input;
-                StringBuilder builder = new StringBuilder();
-                JSONParser parser = new JSONParser();
-                while((input = reader.readLine()) != null){
-                    builder.append(input);
-                }
-                reader.close();
+
                 // parse the response, print relevant data
-                JSONArray courses = (JSONArray) parser.parse(builder.toString());
+                JSONParser parser = new JSONParser();
+                JSONArray courses = (JSONArray) parser.parse(response);
                 Iterator<JSONObject> iterator = courses.iterator();
+                BufferedWriter writer = new BufferedWriter(new FileWriter(new File(System.getProperty("user.dir") + "\\src\\main\\resources\\courses.txt"))); // todo complete writing course names and IDS to file
+
                 while(iterator.hasNext()){
                     JSONObject course = iterator.next();
                     if(course.containsKey("access_restricted_by_date"))
-                        System.out.printf("Course: %d\t Access is restricted by date.\n", (long) course.get("id"));
+                        writer.write("Access Restricted By Date:" + (long) course.get("id") + "\n");
                     else
-                        System.out.println("Retrieved ID for course: " + course.get("name") + ", " + course.get("id"));
+                        writer.write((String)course.get("name") + ":" + (long)course.get("id")+ "\n");
                 }
+                writer.close();
             } catch (IOException e) {
                 throw new RuntimeException(e);
             } catch (ParseException e) {

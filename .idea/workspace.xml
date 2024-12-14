@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="0c76ec5c-439c-4475-8f35-d13a6a8e94c9" name="Changes" comment="begin API token rrefactoring. Added .env">
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/io_github_cdimascio_dotenv_java.xml" afterDir="false" />
+    <list default="true" id="0c76ec5c-439c-4475-8f35-d13a6a8e94c9" name="Changes" comment="[CHECKPOINT] completed token extraction to .env files">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/canvas-api.iml" beforeDir="false" afterPath="$PROJECT_DIR$/canvas-api.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/json" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -177,7 +174,14 @@
       <option name="project" value="LOCAL" />
       <updated>1734202400098</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="[CHECKPOINT] completed token extraction to .env files">
+      <created>1734203569288</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1734203569288</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -205,7 +209,8 @@
     <MESSAGE value="trying to fix json payload 2" />
     <MESSAGE value="[CHECKPOINT] works" />
     <MESSAGE value="begin API token rrefactoring. Added .env" />
-    <option name="LAST_COMMIT_MESSAGE" value="begin API token rrefactoring. Added .env" />
+    <MESSAGE value="[CHECKPOINT] completed token extraction to .env files" />
+    <option name="LAST_COMMIT_MESSAGE" value="[CHECKPOINT] completed token extraction to .env files" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -216,18 +221,13 @@
         </breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/Main.java</url>
-          <line>312</line>
+          <line>311</line>
           <option name="timeStamp" value="2" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/Main.java</url>
-          <line>42</line>
+          <line>41</line>
           <option name="timeStamp" value="3" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/NotionInterface.java</url>
-          <line>9</line>
-          <option name="timeStamp" value="4" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
