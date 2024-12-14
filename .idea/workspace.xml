@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="0c76ec5c-439c-4475-8f35-d13a6a8e94c9" name="Changes" comment="trying to fix json payload 2">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Main.java" afterDir="false" />
-    </list>
+    <list default="true" id="0c76ec5c-439c-4475-8f35-d13a6a8e94c9" name="Changes" comment="[CHECKPOINT] works" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -148,7 +145,14 @@
       <option name="project" value="LOCAL" />
       <updated>1734063218343</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="[CHECKPOINT] works">
+      <created>1734169746532</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1734169746532</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -174,7 +178,8 @@
     <MESSAGE value="building assignment post request payload" />
     <MESSAGE value="trying to fix json payload" />
     <MESSAGE value="trying to fix json payload 2" />
-    <option name="LAST_COMMIT_MESSAGE" value="trying to fix json payload 2" />
+    <MESSAGE value="[CHECKPOINT] works" />
+    <option name="LAST_COMMIT_MESSAGE" value="[CHECKPOINT] works" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
