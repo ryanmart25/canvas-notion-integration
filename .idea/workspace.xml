@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="0c76ec5c-439c-4475-8f35-d13a6a8e94c9" name="Changes" comment="[CHECKPOINT] completed token extraction to .env files">
+    <list default="true" id="0c76ec5c-439c-4475-8f35-d13a6a8e94c9" name="Changes" comment="removed an unused file">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Main.java" afterDir="false" />
     </list>
@@ -62,9 +62,9 @@
       <recent name="main.java" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\timef\Documents\Workspaces\Java\canvas-api\src" />
-      <recent name="C:\Users\timef\Documents\Workspaces\Java\canvas-api\src\main\java" />
       <recent name="C:\Users\timef\Documents\Workspaces\Java\canvas-api\src\main\resources" />
+      <recent name="C:\Users\timef\Documents\Workspaces\Java\canvas-api\src\main\java" />
+      <recent name="C:\Users\timef\Documents\Workspaces\Java\canvas-api\src" />
     </key>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
@@ -188,7 +188,21 @@
       <option name="project" value="LOCAL" />
       <updated>1734206623478</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="fixed ID written as null. Request dispatcher ignores courses with access restrictions.">
+      <created>1734666027572</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1734666027572</updated>
+    </task>
+    <task id="LOCAL-00018" summary="removed an unused file">
+      <created>1734666307516</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1734666307516</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -250,7 +264,9 @@
     <MESSAGE value="begin API token rrefactoring. Added .env" />
     <MESSAGE value="[CHECKPOINT] completed token extraction to .env files" />
     <MESSAGE value="[CHECKPOINT] revised response capture" />
-    <option name="LAST_COMMIT_MESSAGE" value="[CHECKPOINT] revised response capture" />
+    <MESSAGE value="fixed ID written as null. Request dispatcher ignores courses with access restrictions." />
+    <MESSAGE value="removed an unused file" />
+    <option name="LAST_COMMIT_MESSAGE" value="removed an unused file" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -261,7 +277,7 @@
         </breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/Main.java</url>
-          <line>322</line>
+          <line>325</line>
           <option name="timeStamp" value="2" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
