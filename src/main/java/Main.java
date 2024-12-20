@@ -20,7 +20,7 @@ public class Main {
     private String canvasToken;
     private String databaseID;
     private String notionToken;
-    private String[] courseIDs = {"112990000000124161", "112990000000093656", "112990000000114806", "112990000000104413", "112990000000113372", "112990000000106387", "112990000000084604", "112990000000112434", "112990000000089826"};
+    private String[] courseIDs;
     private Map<String, String> courseMap;
     private int assignmentCount;
     private boolean debugMode = false;
@@ -35,6 +35,9 @@ public class Main {
         //String which = scanner.nextLine();
         main.makeCoursesRequest(false);
         for (int i = 0; i < main.courseIDs.length; i++) {
+            if(main.courseIDs[i].equals("null")){
+                continue;
+            }
             URL url = main.buildAssignmentRequestURL(main.courseIDs[i]);
             InputStream inputStream = main.makeAssignmentRequest(url);
             if (inputStream == null) { // feels like a shitty way to do this
@@ -479,17 +482,23 @@ public class Main {
                 HashMap<String, String> courseIDNameMap = new HashMap<>();
                 int i = 0;
                 String[] courseIds = new String[numCourses];
-                while (iterator.hasNext()) {
+                while (iterator.hasNext()) { // this should implicitly prevent array overruns;
                     JSONObject course = iterator.next();
-                    if (course.containsKey("access_restricted_by_date"))
-                        continue;
+                    if (course.containsKey("access_restricted_by_date")) {
+                        courseIds[i] = "null";
+                        i++;
+                    }
                     else{
                         courseIDNameMap.put(Long.toString((long) course.get("id")), (String) course.get("name"));
                         // cache the ids
+                         courseIds[i] = String.valueOf(course.get("id"));
+                         i++;
+                        /*
                         if(i < numCourses){
                             System.out.println(String.valueOf(course.get("id")));
-                            courseIds[i] = String.valueOf(course.get("id"));
+
                         }
+                        */
 
 
                     }
