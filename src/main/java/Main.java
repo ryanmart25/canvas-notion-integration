@@ -126,7 +126,6 @@ public class Main {
             Iterator<JSONObject> iterator = array.iterator();
             int i = 0;
             while (iterator.hasNext()) {
-
                 // build a string. It will contain the properties.
                 JSONObject assignment = iterator.next();
                 // sanitize inputs

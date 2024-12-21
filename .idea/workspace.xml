@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="0c76ec5c-439c-4475-8f35-d13a6a8e94c9" name="Changes" comment="[CHECKPOINT] completed token extraction to .env files">
-      <change afterPath="$PROJECT_DIR$/src/main/java/Spot.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="0c76ec5c-439c-4475-8f35-d13a6a8e94c9" name="Changes" comment="feat(sanitization): &#10;&#10;introduced function for assignment description sanitization.">
+      <change beforePath="$PROJECT_DIR$/src/main/java/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Main.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -199,7 +198,14 @@
       <option name="project" value="LOCAL" />
       <updated>1734822259245</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="feat(sanitization): &#10;&#10;introduced function for assignment description sanitization.">
+      <created>1734823022958</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1734823022958</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -262,7 +268,8 @@
     <MESSAGE value="[CHECKPOINT] completed token extraction to .env files" />
     <MESSAGE value="[CHECKPOINT] revised response capture" />
     <MESSAGE value="fixed laptop dev environment. If it breaks on PC, fix jsonsimple.xml root path." />
-    <option name="LAST_COMMIT_MESSAGE" value="fixed laptop dev environment. If it breaks on PC, fix jsonsimple.xml root path." />
+    <MESSAGE value="feat(sanitization): &#10;&#10;introduced function for assignment description sanitization." />
+    <option name="LAST_COMMIT_MESSAGE" value="feat(sanitization): &#10;&#10;introduced function for assignment description sanitization." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -273,7 +280,7 @@
         </breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/Main.java</url>
-          <line>322</line>
+          <line>323</line>
           <option name="timeStamp" value="2" />
         </line-breakpoint>
       </breakpoints>
