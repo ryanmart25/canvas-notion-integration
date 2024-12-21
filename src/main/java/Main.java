@@ -103,7 +103,6 @@ public class Main {
         try {
             while ((input = reader.readLine()) != null) {
                 fullinput.append(input);
-
             }
             reader.close();
         } catch (IOException e) {

@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="0c76ec5c-439c-4475-8f35-d13a6a8e94c9" name="Changes" comment="removed an unused file">
+    <list default="true" id="0c76ec5c-439c-4475-8f35-d13a6a8e94c9" name="Changes" comment="sanitizing inputs">
+      <change afterPath="$PROJECT_DIR$/src/main/java/Spot.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Main.java" afterDir="false" />
     </list>
@@ -202,7 +203,14 @@
       <option name="project" value="LOCAL" />
       <updated>1734666307516</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="sanitizing inputs">
+      <created>1734670483057</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1734670483057</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -266,7 +274,8 @@
     <MESSAGE value="[CHECKPOINT] revised response capture" />
     <MESSAGE value="fixed ID written as null. Request dispatcher ignores courses with access restrictions." />
     <MESSAGE value="removed an unused file" />
-    <option name="LAST_COMMIT_MESSAGE" value="removed an unused file" />
+    <MESSAGE value="sanitizing inputs" />
+    <option name="LAST_COMMIT_MESSAGE" value="sanitizing inputs" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -277,7 +286,7 @@
         </breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/Main.java</url>
-          <line>325</line>
+          <line>324</line>
           <option name="timeStamp" value="2" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
