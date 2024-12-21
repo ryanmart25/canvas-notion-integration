@@ -111,7 +111,10 @@ public class Main {
         }
         return fullinput.toString();
     }
-
+    private String sanitizeDescription(String unsanitized){
+        String sanitized = unsanitized.replaceAll(Spot.ASSIGNMENTDESCRIPTIONREGEX, Spot.ASSIGNMENTDESCRIPTIONREGEXREPLACEMENT);
+        return sanitized;
+    }
     private String[] parseAssignmentProperties(String unparsed) { //
         JSONParser parser = new JSONParser();
         StringBuilder assignmentOutput = new StringBuilder();
@@ -128,10 +131,9 @@ public class Main {
                 JSONObject assignment = iterator.next();
                 // sanitize inputs
                 String unsanitizedAssignmentDescription = (String) assignment.get("description");
-                String sanitizedAssignmentDescription = unsanitizedAssignmentDescription.replaceAll("\n", "");
-                if (sanitizedAssignmentDescription.contains("\"")) {
-                    sanitizedAssignmentDescription = sanitizedAssignmentDescription.replaceAll("\"", "");
-                }
+                String sanitizedAssignmentDescription = sanitizeDescription(unsanitizedAssignmentDescription);
+                //unsanitizedAssignmentDescription.replaceAll("\n", "");
+
                 //sanitizedAssignmentDescription.replaceAll("")
                 String unsanitizedAssignmentStartDate = (String) assignment.get("unlock_at");
                 String sanitizedAssignmentStartDate;
