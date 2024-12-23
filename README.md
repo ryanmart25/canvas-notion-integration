@@ -8,4 +8,5 @@ Compiles and sanitizes input from Canvas responses and dispatches requests to No
 2. Selection of Notion parent object is not implemented. The application assumes you wish to append entries to a Database.
 3. Source code must be modified to fit requests to a Database with a different Schema. (See Notion API documentation: Create Page for more details)
 # Future 
-I wish to implement a means of connecting Notes and Assignments together to aid in creating visual and spatial links between lecture material and assignments. Detecting relevant Notes to add as subpages (or create links to note pages) to relevant assignment pages.
+I wish to implement a means of connecting Notes and Assignments together to aid in creating visual and spatial links between lecture material and assignments. Detecting relevant Notes to add as subpages (or create links to note pages) to relevant assignment pages. 
+A real methods of installing and running this will be hashed out soon. 
