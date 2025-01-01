@@ -77,8 +77,9 @@ public class Main {
 
     private InputStream makeAssignmentRequest(URL url) {
 
+        HttpsURLConnection connection = null;
         try {
-            HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
+            connection = (HttpsURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
             connection.setRequestProperty("Authorization", "Bearer " + canvasToken);
             if (connection.getResponseCode() == 200) {
@@ -87,11 +88,13 @@ public class Main {
                 return stream;
             } else {
                 System.out.println("Assignment Request: Server Responded with: " + connection.getResponseCode() + "\n" + connection.getResponseMessage());
-                System.out.println(url.toString());
-                connection.disconnect();
-            }
+                System.out.println(url.toString());}
         } catch (IOException e) {
             throw new RuntimeException(e);
+        } finally {
+            if(connection != null){
+                connection.disconnect();
+            }
         }
         return null;
     }
