@@ -451,14 +451,14 @@ public class Main {
     private void makeCoursesRequest(boolean writeCourseList) { // get a list of courses
         URL url = buildCoursesRequestURL();
         if (url != null) {
+            HttpsURLConnection con = null;
             try {
-                HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
+                con = (HttpsURLConnection) url.openConnection();
                 con.setRequestMethod("GET");
                 String token = canvasToken;
                 con.setRequestProperty("Authorization", "Bearer " + token);
-                String response = captureResponse(con);
                 int responseCode = con.getResponseCode();
-                con.disconnect();
+                String response = captureResponse(con);
                 if (responseCode == 200) {
                     if (writeCourseList) {
                         writeCourseToFile(response);
@@ -467,10 +467,12 @@ public class Main {
                     //printFullCourseRequest(con);
                 } else {
                     System.out.print("Courses Request failed. Server Responded with: " + response + " ");
-                    System.out.println(response);
+
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);
+            } finally {
+                con.disconnect();
             }
         }
     }

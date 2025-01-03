@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="0c76ec5c-439c-4475-8f35-d13a6a8e94c9" name="Changes" comment="trivial">
+    <list default="true" id="0c76ec5c-439c-4475-8f35-d13a6a8e94c9" name="Changes" comment="attempting to implement best practices for closing resources.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Main.java" afterDir="false" />
     </list>
@@ -209,7 +209,21 @@
       <option name="project" value="LOCAL" />
       <updated>1734823022958</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="attempting to implement best practices for closing resources.">
+      <created>1735703978844</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1735703978844</updated>
+    </task>
+    <task id="LOCAL-00020" summary="attempting to implement best practices for closing resources.">
+      <created>1735872089065</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1735872089066</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -276,7 +290,8 @@
     <MESSAGE value="[CHECKPOINT] revised response capture" />
     <MESSAGE value="fixed laptop dev environment. If it breaks on PC, fix jsonsimple.xml root path." />
     <MESSAGE value="feat(sanitization): &#10;&#10;introduced function for assignment description sanitization." />
-    <option name="LAST_COMMIT_MESSAGE" value="feat(sanitization): &#10;&#10;introduced function for assignment description sanitization." />
+    <MESSAGE value="attempting to implement best practices for closing resources." />
+    <option name="LAST_COMMIT_MESSAGE" value="attempting to implement best practices for closing resources." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -289,6 +304,11 @@
           <url>file://$PROJECT_DIR$/src/main/java/Main.java</url>
           <line>327</line>
           <option name="timeStamp" value="2" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/Main.java</url>
+          <line>458</line>
+          <option name="timeStamp" value="4" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
