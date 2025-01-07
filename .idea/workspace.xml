@@ -3,6 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="0c76ec5c-439c-4475-8f35-d13a6a8e94c9" name="Changes" comment="attempting to implement best practices for closing resources.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Main.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -22,7 +23,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="refactor_functionality" />
+        <entry key="$PROJECT_DIR$" value="fix_request_property_written_as_null" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -222,7 +223,14 @@
       <option name="project" value="LOCAL" />
       <updated>1735872089066</updated>
     </task>
-    <option name="localTasksCounter" value="21" />
+    <task id="LOCAL-00021" summary="fixed request not working.">
+      <created>1736219038461</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1736219038461</updated>
+    </task>
+    <option name="localTasksCounter" value="22" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -290,7 +298,8 @@
     <MESSAGE value="fixed laptop dev environment. If it breaks on PC, fix jsonsimple.xml root path." />
     <MESSAGE value="feat(sanitization): &#10;&#10;introduced function for assignment description sanitization." />
     <MESSAGE value="attempting to implement best practices for closing resources." />
-    <option name="LAST_COMMIT_MESSAGE" value="attempting to implement best practices for closing resources." />
+    <MESSAGE value="fixed request not working." />
+    <option name="LAST_COMMIT_MESSAGE" value="fixed request not working." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -301,13 +310,8 @@
         </breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/Main.java</url>
-          <line>327</line>
+          <line>323</line>
           <option name="timeStamp" value="2" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/Main.java</url>
-          <line>458</line>
-          <option name="timeStamp" value="4" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

@@ -91,10 +91,6 @@ public class Main {
                 System.out.println(url.toString());}
         } catch (IOException e) {
             throw new RuntimeException(e);
-        } finally {
-            if(connection != null){
-                connection.disconnect();
-            }
         }
         return null;
     }
