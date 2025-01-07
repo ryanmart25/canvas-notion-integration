@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="0c76ec5c-439c-4475-8f35-d13a6a8e94c9" name="Changes" comment="attempting to implement best practices for closing resources.">
+    <list default="true" id="0c76ec5c-439c-4475-8f35-d13a6a8e94c9" name="Changes" comment="bad patch: fixed stream prematurely closing.&#10;need to handle connections better.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Spot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Spot.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -230,7 +230,14 @@
       <option name="project" value="LOCAL" />
       <updated>1736219038461</updated>
     </task>
-    <option name="localTasksCounter" value="22" />
+    <task id="LOCAL-00022" summary="bad patch: fixed stream prematurely closing.&#10;need to handle connections better.">
+      <created>1736219580148</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1736219580148</updated>
+    </task>
+    <option name="localTasksCounter" value="23" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -299,7 +306,8 @@
     <MESSAGE value="feat(sanitization): &#10;&#10;introduced function for assignment description sanitization." />
     <MESSAGE value="attempting to implement best practices for closing resources." />
     <MESSAGE value="fixed request not working." />
-    <option name="LAST_COMMIT_MESSAGE" value="fixed request not working." />
+    <MESSAGE value="bad patch: fixed stream prematurely closing.&#10;need to handle connections better." />
+    <option name="LAST_COMMIT_MESSAGE" value="bad patch: fixed stream prematurely closing.&#10;need to handle connections better." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -312,6 +320,11 @@
           <url>file://$PROJECT_DIR$/src/main/java/Main.java</url>
           <line>323</line>
           <option name="timeStamp" value="2" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/Main.java</url>
+          <line>48</line>
+          <option name="timeStamp" value="6" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
