@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="0c76ec5c-439c-4475-8f35-d13a6a8e94c9" name="Changes" comment="attempting to implement best practices for closing resources.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Main.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
