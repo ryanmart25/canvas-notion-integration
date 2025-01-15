@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="0c76ec5c-439c-4475-8f35-d13a6a8e94c9" name="Changes" comment="sanitizing inputs">
-      <change afterPath="$PROJECT_DIR$/src/main/java/Spot.java" afterDir="false" />
+    <list default="true" id="0c76ec5c-439c-4475-8f35-d13a6a8e94c9" name="Changes" comment="created Spot">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Main.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -210,7 +208,14 @@
       <option name="project" value="LOCAL" />
       <updated>1734670483057</updated>
     </task>
-    <option name="localTasksCounter" value="20" />
+    <task id="LOCAL-00020" summary="created Spot">
+      <created>1734754036454</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1734754036454</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -275,7 +280,8 @@
     <MESSAGE value="fixed ID written as null. Request dispatcher ignores courses with access restrictions." />
     <MESSAGE value="removed an unused file" />
     <MESSAGE value="sanitizing inputs" />
-    <option name="LAST_COMMIT_MESSAGE" value="sanitizing inputs" />
+    <MESSAGE value="created Spot" />
+    <option name="LAST_COMMIT_MESSAGE" value="created Spot" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
