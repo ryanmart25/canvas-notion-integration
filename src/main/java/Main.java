@@ -77,8 +77,9 @@ public class Main {
 
     private InputStream makeAssignmentRequest(URL url) {
 
+        HttpsURLConnection connection = null;
         try {
-            HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
+            connection = (HttpsURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
             connection.setRequestProperty("Authorization", "Bearer " + canvasToken);
             if (connection.getResponseCode() == 200) {
@@ -87,9 +88,7 @@ public class Main {
                 return stream;
             } else {
                 System.out.println("Assignment Request: Server Responded with: " + connection.getResponseCode() + "\n" + connection.getResponseMessage());
-                System.out.println(url.toString());
-                connection.disconnect();
-            }
+                System.out.println(url.toString());}
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -103,6 +102,7 @@ public class Main {
         try {
             while ((input = reader.readLine()) != null) {
                 fullinput.append(input);
+
             }
             reader.close();
         } catch (IOException e) {
@@ -111,11 +111,8 @@ public class Main {
         return fullinput.toString();
     }
     private String sanitizeDescription(String unsanitized){
-        String sanitizedAssignmentDescription = unsanitized.replaceAll("\n", "");
-        if (sanitizedAssignmentDescription.contains("\"")) {
-            sanitizedAssignmentDescription = sanitizedAssignmentDescription.replaceAll("\"", "");
-        }
-        return sanitizedAssignmentDescription;
+        String sanitized = unsanitized.replaceAll(Spot.ASSIGNMENTDESCRIPTIONREGEX, Spot.ASSIGNMENTDESCRIPTIONREGEXREPLACEMENT);
+        return sanitized;
     }
     private String[] parseAssignmentProperties(String unparsed) { //
         JSONParser parser = new JSONParser();
@@ -128,12 +125,13 @@ public class Main {
             Iterator<JSONObject> iterator = array.iterator();
             int i = 0;
             while (iterator.hasNext()) {
-
                 // build a string. It will contain the properties.
                 JSONObject assignment = iterator.next();
                 // sanitize inputs
                 String unsanitizedAssignmentDescription = (String) assignment.get("description");
-                String sanitized = sanitizeDescription(unsanitizedAssignmentDescription);
+                String sanitizedAssignmentDescription = sanitizeDescription(unsanitizedAssignmentDescription);
+                //unsanitizedAssignmentDescription.replaceAll("\n", "");
+
                 //sanitizedAssignmentDescription.replaceAll("")
                 String unsanitizedAssignmentStartDate = (String) assignment.get("unlock_at");
                 String sanitizedAssignmentStartDate;
@@ -154,7 +152,7 @@ public class Main {
                     sanitizedAssignmentEndDate = unsanitizedAssignmentEndDate;
                 }
                 //System.out.println("Assignment Description: \n\n" + assignment.get("description"));
-                assignmentOutput.append("\"properties\": {\n\t" + "\"Name\": {\n\t\t" + "\"title\": [\n\t\t\t" + "{\n\t\t\t\t" + "           \"text\": {\n\t\t\t\t\t\t" + "\"content\": \"").append(assignment.get("name")).append("\"\n\t\t\t\t\t").append("}\n\t\t\t\t").append("        }").append("       ]\n\t\t\t").append("},").append("\"Notes\": {").append("\"rich_text\": [").append("{").append("\"text\": {").append("\"content\": \"").append(sanitized).append("\"").append("}").append("}").append("]").append("},").append("\"Course\": {").append("\"select\": {").append("\"name\": \"").append(courseMap.get(Long.toString((long) assignment.get("course_id")))).append("\"").append("}").append("},").append("\"Dates\": {").append("\"date\": {").append("\"start\": \"").append(sanitizedAssignmentStartDate).append("\",").append("\"end\": \"").append(sanitizedAssignmentEndDate).append("\"").append("}").append("},").append("\"Task\": {").append("\"multi_select\": [").append("{").append("\"name\": \"").append(resolveAssignmentType((JSONArray) assignment.get("submission_types"))).append("\"").append( // i am pretty sure i need to fix this to ensure it parses the array properly.
+                assignmentOutput.append("\"properties\": {\n\t" + "\"Name\": {\n\t\t" + "\"title\": [\n\t\t\t" + "{\n\t\t\t\t" + "           \"text\": {\n\t\t\t\t\t\t" + "\"content\": \"").append(assignment.get("name")).append("\"\n\t\t\t\t\t").append("}\n\t\t\t\t").append("        }").append("       ]\n\t\t\t").append("},").append("\"Notes\": {").append("\"rich_text\": [").append("{").append("\"text\": {").append("\"content\": \"").append(sanitizedAssignmentDescription).append("\"").append("}").append("}").append("]").append("},").append("\"Course\": {").append("\"select\": {").append("\"name\": \"").append(courseMap.get(Long.toString((long) assignment.get("course_id")))).append("\"").append("}").append("},").append("\"Dates\": {").append("\"date\": {").append("\"start\": \"").append(sanitizedAssignmentStartDate).append("\",").append("\"end\": \"").append(sanitizedAssignmentEndDate).append("\"").append("}").append("},").append("\"Task\": {").append("\"multi_select\": [").append("{").append("\"name\": \"").append(resolveAssignmentType((JSONArray) assignment.get("submission_types"))).append("\"").append( // i am pretty sure i need to fix this to ensure it parses the array properly.
                         "}").append("]").append("}").append("}");
 
                 assignments[i] = assignmentOutput.toString();
@@ -449,14 +447,14 @@ public class Main {
     private void makeCoursesRequest(boolean writeCourseList) { // get a list of courses
         URL url = buildCoursesRequestURL();
         if (url != null) {
+            HttpsURLConnection con = null;
             try {
-                HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
+                con = (HttpsURLConnection) url.openConnection();
                 con.setRequestMethod("GET");
                 String token = canvasToken;
                 con.setRequestProperty("Authorization", "Bearer " + token);
-                String response = captureResponse(con);
                 int responseCode = con.getResponseCode();
-                con.disconnect();
+                String response = captureResponse(con);
                 if (responseCode == 200) {
                     if (writeCourseList) {
                         writeCourseToFile(response);
@@ -465,10 +463,12 @@ public class Main {
                     //printFullCourseRequest(con);
                 } else {
                     System.out.print("Courses Request failed. Server Responded with: " + response + " ");
-                    System.out.println(response);
+
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);
+            } finally {
+                con.disconnect();
             }
         }
     }

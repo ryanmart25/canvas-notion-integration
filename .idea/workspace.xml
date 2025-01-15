@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="0c76ec5c-439c-4475-8f35-d13a6a8e94c9" name="Changes" comment="created Spot">
+    <list default="true" id="0c76ec5c-439c-4475-8f35-d13a6a8e94c9" name="Changes" comment="bad patch: fixed stream prematurely closing.&#10;need to handle connections better.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Spot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Spot.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -22,10 +23,18 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="e9d90c382f928d8884c4016b8e73c5ea628f902e" />
+        <entry key="$PROJECT_DIR$" value="fix_request_property_written_as_null" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -39,32 +48,31 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;Downloaded.Files.Path.Enabled&quot;: &quot;false&quot;,
-    &quot;Repository.Attach.Annotations&quot;: &quot;false&quot;,
-    &quot;Repository.Attach.JavaDocs&quot;: &quot;true&quot;,
-    &quot;Repository.Attach.Sources&quot;: &quot;false&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/timef/Documents/Workspaces/Java/canvas-api&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Libraries&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;
-  }
-}</component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="project.structure.last.edited" value="Problems" />
+    <property name="project.structure.proportion" value="0.0" />
+    <property name="project.structure.side.proportion" value="0.2" />
+  </component>
   <component name="RecentsManager">
     <key name="CreateClassDialog.RecentsKey">
       <recent name="main.java" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\timef\Documents\Workspaces\Java\canvas-api\src\main\resources" />
-      <recent name="C:\Users\timef\Documents\Workspaces\Java\canvas-api\src\main\java" />
       <recent name="C:\Users\timef\Documents\Workspaces\Java\canvas-api\src" />
+      <recent name="C:\Users\timef\Documents\Workspaces\Java\canvas-api\src\main\java" />
+      <recent name="C:\Users\timef\Documents\Workspaces\Java\canvas-api\src\main\resources" />
     </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="Run" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="main.java.Main" />
+      <module name="canvas-api" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -187,36 +195,53 @@
       <option name="project" value="LOCAL" />
       <updated>1734206623478</updated>
     </task>
-    <task id="LOCAL-00017" summary="fixed ID written as null. Request dispatcher ignores courses with access restrictions.">
-      <created>1734666027572</created>
+    <task id="LOCAL-00017" summary="fixed laptop dev environment. If it breaks on PC, fix jsonsimple.xml root path.">
+      <created>1734822259245</created>
       <option name="number" value="00017" />
       <option name="presentableId" value="LOCAL-00017" />
       <option name="project" value="LOCAL" />
-      <updated>1734666027572</updated>
+      <updated>1734822259245</updated>
     </task>
-    <task id="LOCAL-00018" summary="removed an unused file">
-      <created>1734666307516</created>
+    <task id="LOCAL-00018" summary="feat(sanitization): &#10;&#10;introduced function for assignment description sanitization.">
+      <created>1734823022958</created>
       <option name="number" value="00018" />
       <option name="presentableId" value="LOCAL-00018" />
       <option name="project" value="LOCAL" />
-      <updated>1734666307516</updated>
+      <updated>1734823022958</updated>
     </task>
-    <task id="LOCAL-00019" summary="sanitizing inputs">
-      <created>1734670483057</created>
+    <task id="LOCAL-00019" summary="attempting to implement best practices for closing resources.">
+      <created>1735703978844</created>
       <option name="number" value="00019" />
       <option name="presentableId" value="LOCAL-00019" />
       <option name="project" value="LOCAL" />
-      <updated>1734670483057</updated>
+      <updated>1735703978844</updated>
     </task>
-    <task id="LOCAL-00020" summary="created Spot">
-      <created>1734754036454</created>
+    <task id="LOCAL-00020" summary="attempting to implement best practices for closing resources.">
+      <created>1735872089065</created>
       <option name="number" value="00020" />
       <option name="presentableId" value="LOCAL-00020" />
       <option name="project" value="LOCAL" />
-      <updated>1734754036454</updated>
+      <updated>1735872089066</updated>
     </task>
-    <option name="localTasksCounter" value="21" />
+    <task id="LOCAL-00021" summary="fixed request not working.">
+      <created>1736219038461</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1736219038461</updated>
+    </task>
+    <task id="LOCAL-00022" summary="bad patch: fixed stream prematurely closing.&#10;need to handle connections better.">
+      <created>1736219580148</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1736219580148</updated>
+    </task>
+    <option name="localTasksCounter" value="23" />
     <servers />
+  </component>
+  <component name="UnknownFeatures">
+    <option featureType="com.intellij.fileTypeFactory" implementationName=".env" />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
@@ -277,11 +302,12 @@
     <MESSAGE value="begin API token rrefactoring. Added .env" />
     <MESSAGE value="[CHECKPOINT] completed token extraction to .env files" />
     <MESSAGE value="[CHECKPOINT] revised response capture" />
-    <MESSAGE value="fixed ID written as null. Request dispatcher ignores courses with access restrictions." />
-    <MESSAGE value="removed an unused file" />
-    <MESSAGE value="sanitizing inputs" />
-    <MESSAGE value="created Spot" />
-    <option name="LAST_COMMIT_MESSAGE" value="created Spot" />
+    <MESSAGE value="fixed laptop dev environment. If it breaks on PC, fix jsonsimple.xml root path." />
+    <MESSAGE value="feat(sanitization): &#10;&#10;introduced function for assignment description sanitization." />
+    <MESSAGE value="attempting to implement best practices for closing resources." />
+    <MESSAGE value="fixed request not working." />
+    <MESSAGE value="bad patch: fixed stream prematurely closing.&#10;need to handle connections better." />
+    <option name="LAST_COMMIT_MESSAGE" value="bad patch: fixed stream prematurely closing.&#10;need to handle connections better." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -292,15 +318,19 @@
         </breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/Main.java</url>
-          <line>324</line>
+          <line>323</line>
           <option name="timeStamp" value="2" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/Main.java</url>
-          <line>40</line>
-          <option name="timeStamp" value="4" />
+          <line>48</line>
+          <option name="timeStamp" value="6" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
+  </component>
+  <component name="XPathView.XPathProjectComponent">
+    <history />
+    <find-history />
   </component>
 </project>
