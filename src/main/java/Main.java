@@ -411,10 +411,9 @@ public class Main {
 
     private String captureResponse(HttpsURLConnection connection) {
         StringBuilder builder = new StringBuilder();
-        String failureSignifier = "failure";
+        String failureSignifier = "failed to capture response";
         builder.append(failureSignifier);
-        try {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+        try(BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()))){
             String input;
 
             while ((input = reader.readLine()) != null) {
@@ -422,9 +421,9 @@ public class Main {
             }
             reader.close();
             connection.disconnect();
-            builder.replace(0, failureSignifier.length(), ""); // if all went well without the reading erroring out, remove the failure signifier
-
-        } catch (IOException e) {
+            builder.replace(0, failureSignifier.length(), "");
+        }
+        catch (IOException e) {
             System.out.println(e.getMessage());
             // Something went wrong while reading, ensure everything downstream knows it. Keep the failure signifier, remove everything else
             if (builder.length() > failureSignifier.length())
@@ -444,7 +443,7 @@ public class Main {
         return url;
     }
 
-    private void makeCoursesRequest(boolean writeCourseList) { // get a list of courses
+    private int makeCoursesRequest(boolean writeCourseList) { // get a list of courses
         URL url = buildCoursesRequestURL();
         if (url != null) {
             HttpsURLConnection con = null;
@@ -462,15 +461,16 @@ public class Main {
                     this.courseMap = mapCourseIDS(response);
                     //printFullCourseRequest(con);
                 } else {
-                    System.out.print("Courses Request failed. Server Responded with: " + response + " ");
-
+                    System.out.print("Courses Request failed. Server Responded with: " + response + " Program should exit now");
+                    return -1;
                 }
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                System.out.println("An IO error occurred while making a request to canvas's Get Courses endpoint. The program should exit now. ");
             } finally {
                 con.disconnect();
             }
         }
+        return 0;
     }
 
     private HashMap<String, String> mapCourseIDS(String response) {
