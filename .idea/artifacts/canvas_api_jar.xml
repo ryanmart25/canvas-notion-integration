@@ -1,0 +1,10 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="canvas-api:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/canvas_api_jar</output-path>
+    <root id="archive" name="canvas-api.jar">
+      <element id="module-output" name="canvas-api" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../../Codebases/Java/libraries/json-simple-1.1.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/io/github/cdimascio/dotenv-java/3.0.2/dotenv-java-3.0.2.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
