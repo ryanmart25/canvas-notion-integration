@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="ArtifactsWorkspaceSettings">
+    <artifacts-to-build>
+      <artifact name="canvas-api:jar" />
+    </artifacts-to-build>
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="0c76ec5c-439c-4475-8f35-d13a6a8e94c9" name="Changes" comment="created Spot">
+    <list default="true" id="0c76ec5c-439c-4475-8f35-d13a6a8e94c9" name="Changes" comment="minor changes: improved resource handling of Response Reader">
+      <change afterPath="$PROJECT_DIR$/.idea/artifacts/canvas_api_jar.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/json_simple_1_1_1.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/json_simple_1_1_1.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/canvas-api.iml" beforeDir="false" afterPath="$PROJECT_DIR$/canvas-api.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Spot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Spot.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -55,9 +56,10 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "ASKED_MARK_IGNORED_FILES_AS_EXCLUDED": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "last_opened_file_path": "C:/Users/timef/Documents/Codebases/Java/libraries/json-simple-1.1.1.jar",
-    "project.structure.last.edited": "Libraries",
+    "project.structure.last.edited": "Artifacts",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.2"
   }
@@ -244,7 +246,14 @@
       <option name="project" value="LOCAL" />
       <updated>1736219580148</updated>
     </task>
-    <option name="localTasksCounter" value="23" />
+    <task id="LOCAL-00023" summary="minor changes: improved resource handling of Response Reader">
+      <created>1737051986836</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1737051986836</updated>
+    </task>
+    <option name="localTasksCounter" value="24" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -314,7 +323,8 @@
     <MESSAGE value="attempting to implement best practices for closing resources." />
     <MESSAGE value="fixed request not working." />
     <MESSAGE value="bad patch: fixed stream prematurely closing.&#10;need to handle connections better." />
-    <option name="LAST_COMMIT_MESSAGE" value="bad patch: fixed stream prematurely closing.&#10;need to handle connections better." />
+    <MESSAGE value="minor changes: improved resource handling of Response Reader" />
+    <option name="LAST_COMMIT_MESSAGE" value="minor changes: improved resource handling of Response Reader" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

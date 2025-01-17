@@ -5,6 +5,7 @@ src/main/resources
 !**/src/test/**/out/
 .env
 .idea/libraries
+.idea/artifacts
 ### Eclipse ###
 .apt_generated
 .classpath
@@ -16,6 +17,7 @@ src/main/resources
 bin/
 !**/src/main/**/bin/
 !**/src/test/**/bin/
+src/META-INF
 
 ### NetBeans ###
 /nbproject/private/
