@@ -28,31 +28,79 @@ public class Main {
     public static void main(String[] args) {
         Main main = new Main();
         main.loadSecrets(main);
-        //Scanner scanner = new Scanner(System.in);
-        //Specifies what the user would like to do.
-        // 1. "All Courses" prints a list of currently enrolled courses
-        // 2. "<name of course>" prints a list of assignments for a specific course
-        //String which = scanner.nextLine();
-        main.makeCoursesRequest(false);
-        for (int i = 0; i < main.courseIDs.length; i++) {
-            if(main.courseIDs[i].equals("null")){
-                continue;
+        if(args.length > 0){
+            // parse arguments
+            for (int i = 0; i < args.length; i++) {
+                if(args[i].equals("-h")){
+                    System.out.println("    -d  pass a notion database ID to use in place of the ID specified in the environment variables.\n" +
+                            "    -n  pass a noton API token to use in placde of the token specified in the environment variables.\n" +
+                            "    -c  pass a canvas api token to use in place of the token specified in the environment variables.\n" +
+                            "    -h  print the help message");
+                    return;
+                }
+                if(args[i].equals("-d") && i < args.length - 1){
+                    System.out.println("Using notion database ID: " + args[i + 1]);
+                    main.databaseID = args[i + 1];
+                }
+                if(args[i].equals("-c") && i < args.length - 1){
+                    System.out.println("Using Canvas API Token: " + args[i + 1]);
+                    main.canvasToken = args[i + 1];
+                }
+                if(args[i].equals("-n") && i < args.length - 1){
+                    System.out.println("Using Notion API Token: " + args[i + 1]);
+                    main.notionToken = args[i + 1];
+                }
             }
-            URL url = main.buildAssignmentRequestURL(main.courseIDs[i]);
-            InputStream inputStream = main.makeAssignmentRequest(url);
-            if (inputStream == null) { // feels like a shitty way to do this
-                continue;
-            }
-            String request = main.readAssignmentRequest(inputStream);
-            String[] assignmentsProperties = main.parseAssignmentProperties(request);
-            for (int j = 0; j < main.assignmentCount; j++) {
-                String notionCreatePagePayload = main.buildPageCreationPayload(assignmentsProperties[j]);
-                //System.out.println(notionCreatePagePayload);
-                main.makeNotionPageCreationRequest(notionCreatePagePayload, main.notionToken);
+            main.makeCoursesRequest(false);
+            for (int i = 0; i < main.courseIDs.length; i++) {
+                if(main.courseIDs[i].equals("null")){
+                    continue;
+                }
+                URL url = main.buildAssignmentRequestURL(main.courseIDs[i]);
+                InputStream inputStream = main.makeAssignmentRequest(url);
+                if (inputStream == null) { // feels like a shitty way to do this
+                    continue;
+                }
+                String request = main.readAssignmentRequest(inputStream);
+                String[] assignmentsProperties = main.parseAssignmentProperties(request);
+                for (int j = 0; j < main.assignmentCount; j++) {
+                    String notionCreatePagePayload = main.buildPageCreationPayload(assignmentsProperties[j]);
+                    //System.out.println(notionCreatePagePayload);
+                    main.makeNotionPageCreationRequest(notionCreatePagePayload, main.notionToken);
 
+                }
+                //System.out.println(compiledAssignments);
             }
-            //System.out.println(compiledAssignments);
+
+        }else{
+
+            //Scanner scanner = new Scanner(System.in);
+            //Specifies what the user would like to do.
+            // 1. "All Courses" prints a list of currently enrolled courses
+            // 2. "<name of course>" prints a list of assignments for a specific course
+            //String which = scanner.nextLine();
+            main.makeCoursesRequest(false);
+            for (int i = 0; i < main.courseIDs.length; i++) {
+                if(main.courseIDs[i].equals("null")){
+                    continue;
+                }
+                URL url = main.buildAssignmentRequestURL(main.courseIDs[i]);
+                InputStream inputStream = main.makeAssignmentRequest(url);
+                if (inputStream == null) { // feels like a shitty way to do this
+                    continue;
+                }
+                String request = main.readAssignmentRequest(inputStream);
+                String[] assignmentsProperties = main.parseAssignmentProperties(request);
+                for (int j = 0; j < main.assignmentCount; j++) {
+                    String notionCreatePagePayload = main.buildPageCreationPayload(assignmentsProperties[j]);
+                    //System.out.println(notionCreatePagePayload);
+                    main.makeNotionPageCreationRequest(notionCreatePagePayload, main.notionToken);
+
+                }
+                //System.out.println(compiledAssignments);
+            }
         }
+
 
        // main.exit();
     }
