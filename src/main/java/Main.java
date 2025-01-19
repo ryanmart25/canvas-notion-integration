@@ -13,7 +13,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import io.github.cdimascio.dotenv.Dotenv;
+
 
 public class Main {
     private final String[] parameters = {};
@@ -122,11 +122,10 @@ public class Main {
     }
 
     private void loadSecrets(Main obj) {
-        Dotenv dotenv = null;
-        dotenv = Dotenv.configure().load();
-        obj.canvasToken = dotenv.get("CANVASTOKEN");
-        obj.notionToken = dotenv.get("NOTIONTOKEN");
-        obj.databaseID = dotenv.get("DATABASEID");
+
+        obj.canvasToken = System.getenv("CANVASTOKEN");
+        obj.notionToken = System.getenv("NOTIONTOKEN");
+        obj.databaseID = System.getenv("DATABASEID");
     }
 
     private URL buildAssignmentRequestURL(String courseid) {

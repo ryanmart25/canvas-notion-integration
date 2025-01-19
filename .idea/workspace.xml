@@ -6,10 +6,11 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0c76ec5c-439c-4475-8f35-d13a6a8e94c9" name="Changes" comment="added rudimentary CLI">
+    <list default="true" id="0c76ec5c-439c-4475-8f35-d13a6a8e94c9" name="Changes" comment="updated help printout">
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/io_github_cdimascio_dotenv_java.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/canvas-api.iml" beforeDir="false" afterPath="$PROJECT_DIR$/canvas-api.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Spot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Spot.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -74,7 +75,7 @@
       <recent name="C:\Users\timef\Documents\Workspaces\Java\canvas-api\src\main\resources" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.Test CLI - Chaining flags">
+  <component name="RunManager" selected="Application.Test CLI - Using Environment Variables">
     <configuration name="Run" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="main.java.Main" />
       <module name="canvas-api" />
@@ -106,6 +107,19 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="Test CLI - Using Environment Variables" type="Application" factoryName="Application">
+      <envs>
+        <env name="CANVASTOKEN" value="11299~yK7VGyALmHfauH4wFP2HB37rkXR6CruwWuz2B7nTRVtcw62UrWQ3nxYCBW8XrXPk" />
+        <env name="DATABASEID" value="1640fbf16b3681c2a86eeed9accde2c6" />
+        <env name="NOTIONTOKEN" value="secret_wY51VUKUCno5QvCrhb9HBnsuiIzm2bBNXqMqsVl8J4s" />
+      </envs>
+      <option name="MAIN_CLASS_NAME" value="main.java.Main" />
+      <module name="canvas-api" />
+      <option name="PROGRAM_PARAMETERS" value="-e" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="Test CLI - help" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="main.java.Main" />
       <module name="canvas-api" />
@@ -120,6 +134,7 @@
       <item itemvalue="Application.Test CLI - Notion Token" />
       <item itemvalue="Application.Test CLI - Notion DB ID" />
       <item itemvalue="Application.Test CLI - Chaining flags" />
+      <item itemvalue="Application.Test CLI - Using Environment Variables" />
     </list>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
@@ -299,7 +314,14 @@
       <option name="project" value="LOCAL" />
       <updated>1737160461918</updated>
     </task>
-    <option name="localTasksCounter" value="25" />
+    <task id="LOCAL-00025" summary="updated help printout">
+      <created>1737247867373</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1737247867373</updated>
+    </task>
+    <option name="localTasksCounter" value="26" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -371,7 +393,8 @@
     <MESSAGE value="bad patch: fixed stream prematurely closing.&#10;need to handle connections better." />
     <MESSAGE value="minor changes: improved resource handling of Response Reader" />
     <MESSAGE value="added rudimentary CLI" />
-    <option name="LAST_COMMIT_MESSAGE" value="added rudimentary CLI" />
+    <MESSAGE value="updated help printout" />
+    <option name="LAST_COMMIT_MESSAGE" value="updated help printout" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -382,7 +405,7 @@
         </breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/Main.java</url>
-          <line>383</line>
+          <line>386</line>
           <option name="timeStamp" value="2" />
         </line-breakpoint>
       </breakpoints>
