@@ -414,9 +414,13 @@ public class Main {
                 if (connection.getResponseCode() == 200) {
                     System.out.println("Notion Database Page Creation Request: Server Responded OK");
                     recieveResponseFromPOST(connection);
-                } else {
+                }
+                else if(connection.getResponseCode() == 401){
+                    System.out.println("Notion said you were unauthorized to make that request. Is your token correct?\nToken: " + this.notionToken);
+                }
+                else {
                     System.out.println("Notion Page Creation Request: Server Responded: " + connection.getResponseCode() + "\t\t" + connection.getResponseMessage());
-                    System.out.println("Payload: " + payload);
+                    System.out.println("Payload: \n" + payload);
                 }
             } catch (ProtocolException e) {
                 throw new RuntimeException(e);
@@ -523,7 +527,11 @@ public class Main {
                     }
                     this.courseMap = mapCourseIDS(response);
                     //printFullCourseRequest(con);
-                } else {
+                }
+                else if(responseCode == 401){
+                    System.out.println("The server said you are unauthorized to make this request. Is the canvas API token correct?\nToken: " + this.canvasToken);
+                }
+                else {
                     System.out.print("Courses Request failed. Server Responded with: " + response + " Program should exit now");
                     return -1;
                 }
