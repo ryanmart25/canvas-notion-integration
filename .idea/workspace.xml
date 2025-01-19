@@ -6,7 +6,7 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0c76ec5c-439c-4475-8f35-d13a6a8e94c9" name="Changes" comment="attempted to add command line interpretation. problem: apache commons CLI and json-simple have a conflicting class: ParseException.java. &#10;Fix: Roll my own CLI. It just needs to be basic. If it turns out I need an actual parser, I'll make the switch.">
+    <list default="true" id="0c76ec5c-439c-4475-8f35-d13a6a8e94c9" name="Changes" comment="added rudimentary CLI">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/Spot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Spot.java" afterDir="false" />
@@ -59,7 +59,7 @@
     &quot;ASKED_MARK_IGNORED_FILES_AS_EXCLUDED&quot;: &quot;true&quot;,
     &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
     &quot;last_opened_file_path&quot;: &quot;C:/Users/timef/Documents/Codebases/Java/libraries/json-simple-1.1.1.jar&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Artifacts&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Libraries&quot;,
     &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
     &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;
   }
@@ -292,7 +292,14 @@
       <option name="project" value="LOCAL" />
       <updated>1737051986836</updated>
     </task>
-    <option name="localTasksCounter" value="24" />
+    <task id="LOCAL-00024" summary="added rudimentary CLI">
+      <created>1737160461918</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1737160461918</updated>
+    </task>
+    <option name="localTasksCounter" value="25" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -363,7 +370,8 @@
     <MESSAGE value="fixed request not working." />
     <MESSAGE value="bad patch: fixed stream prematurely closing.&#10;need to handle connections better." />
     <MESSAGE value="minor changes: improved resource handling of Response Reader" />
-    <option name="LAST_COMMIT_MESSAGE" value="minor changes: improved resource handling of Response Reader" />
+    <MESSAGE value="added rudimentary CLI" />
+    <option name="LAST_COMMIT_MESSAGE" value="added rudimentary CLI" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -374,7 +382,7 @@
         </breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/Main.java</url>
-          <line>371</line>
+          <line>383</line>
           <option name="timeStamp" value="2" />
         </line-breakpoint>
       </breakpoints>
