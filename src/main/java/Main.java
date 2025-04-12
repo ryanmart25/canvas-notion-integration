@@ -22,55 +22,51 @@ public class Main {
     private String notionToken;
     private String[] courseIDs;
     private Map<String, String> courseMap;
+    private boolean ping_flag;
     private int assignmentCount;
     private boolean debugMode = false;
 
     public static void main(String[] args) {
         Main main = new Main();
 
-        if(args.length > 0){
+        if (args.length > 0) {
             // parse arguments
             for (int i = 0; i < args.length; i++) {
-                if(args[i].equals("-h")){
+                if (args[i].equals("-h")) {
                     System.out.println(
                             "Fetch and Append Canvas coursework to a Notion Database.\n" +
-                            "Usage:\nPass Notion and Canvas API tokens and target database ID or use environment variables.\n"+
-                            "    -d  pass a notion database ID to use in place of the ID specified in the environment variables.\n" +
-                            "    -n  pass a noton API token to use in placde of the token specified in the environment variables.\n" +
-                            "    -c  pass a canvas api token to use in place of the token specified in the environment variables.\n" +
-                            "    -e  use environment variables for Database ID and API tokens.\n" +
+                                    "Usage:\nPass Notion and Canvas API tokens and target database ID or use environment variables.\n" +
+                                    "    -d  pass a Notion database ID to use in place of the ID specified in the environment variables.\n" +
+                                    "    -n  pass a Notion API token to use in place of the token specified in the environment variables.\n" +
+                                    "    -c  pass a canvas api token to use in place of the token specified in the environment variables.\n" +
+                                    "    -e  use environment variables for Database ID and API tokens.\n" +
                                     "\tFormat:\n" +
                                     "\t'NOTIONTOKEN=<token>'\n" +
                                     "\t'CANVASTOKEN=<token>'\n" +
                                     "\t'DATABASEID=<database ID>'" +
-                            "    -h  print the help message.");
+                                    "    -h  print the help message.");
                     return;
-                }
-                else if(args[i].equals("-e") && args.length == 1){
+                } else if (args[i].equals("-e") && args.length == 1) {
                     System.out.println("Using environment variables.");
                     main.loadSecrets(main);
-                }
-                else if(args[i].equals("-d") && i < args.length - 1){
+                } else if (args[i].equals("-d") && i < args.length - 1) {
                     System.out.println("Using notion database ID: " + args[i + 1]);
                     main.databaseID = args[i + 1];
-                }
-                else if(args[i].equals("-c") && i < args.length - 1){
+                } else if (args[i].equals("-c") && i < args.length - 1) {
                     System.out.println("Using Canvas API Token: " + args[i + 1]);
                     main.canvasToken = args[i + 1];
-                }
-                else if(args[i].equals("-n") && i < args.length - 1){
+                } else if (args[i].equals("-n") && i < args.length - 1) {
                     System.out.println("Using Notion API Token: " + args[i + 1]);
                     main.notionToken = args[i + 1];
-                }
-                else{
-                    System.out.println("Flags not recognized, too many, or too failed to pass a value properly.");
+                } else {
+                    System.out.println("Flags not recognized, too many, or user failed to pass a value properly.");
                     return;
                 }
 
             }
-            main.makeCoursesRequest(false);
+            main.makeCoursesRequest(true, false);
             for (int i = 0; i < main.courseIDs.length; i++) {
-                if(main.courseIDs[i].equals("null")){
+                if (main.courseIDs[i].equals("null")) {
                     continue;
                 }
                 URL url = main.buildAssignmentRequestURL(main.courseIDs[i]);
@@ -88,16 +84,16 @@ public class Main {
                 }
                 //System.out.println(compiledAssignments);
             }
-        }else{
+        } else {
 
             //Scanner scanner = new Scanner(System.in);
             //Specifies what the user would like to do.
             // 1. "All Courses" prints a list of currently enrolled courses
             // 2. "<name of course>" prints a list of assignments for a specific course
             //String which = scanner.nextLine();
-            main.makeCoursesRequest(false);
+            main.makeCoursesRequest(false, false);
             for (int i = 0; i < main.courseIDs.length; i++) {
-                if(main.courseIDs[i].equals("null")){
+                if (main.courseIDs[i].equals("null")) {
                     continue;
                 }
                 URL url = main.buildAssignmentRequestURL(main.courseIDs[i]);
@@ -118,7 +114,7 @@ public class Main {
         }
 
 
-       // main.exit();
+        // main.exit();
     }
 
     private void loadSecrets(Main obj) {
@@ -151,7 +147,8 @@ public class Main {
                 return stream;
             } else {
                 System.out.println("Assignment Request: Server Responded with: " + connection.getResponseCode() + "\n" + connection.getResponseMessage());
-                System.out.println(url.toString());}
+                System.out.println(url.toString());
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -173,10 +170,12 @@ public class Main {
         }
         return fullinput.toString();
     }
-    private String sanitizeDescription(String unsanitized){
+
+    private String sanitizeDescription(String unsanitized) {
         String sanitized = unsanitized.replaceAll(Spot.ASSIGNMENTDESCRIPTIONREGEX, Spot.ASSIGNMENTDESCRIPTIONREGEXREPLACEMENT);
         return sanitized;
     }
+
     private String[] parseAssignmentProperties(String unparsed) { //
         JSONParser parser = new JSONParser();
         StringBuilder assignmentOutput = new StringBuilder();
@@ -190,7 +189,8 @@ public class Main {
             while (iterator.hasNext()) {
                 // build a string. It will contain the properties.
                 JSONObject assignment = iterator.next();
-                // sanitize inputs
+                // sanitize inputs.
+                // necessary because Canvas returns a bunch of html, quotes, backslashes, etc break JSON
                 String unsanitizedAssignmentDescription = (String) assignment.get("description");
                 String sanitizedAssignmentDescription = sanitizeDescription(unsanitizedAssignmentDescription);
                 //unsanitizedAssignmentDescription.replaceAll("\n", "");
@@ -215,8 +215,54 @@ public class Main {
                     sanitizedAssignmentEndDate = unsanitizedAssignmentEndDate;
                 }
                 //System.out.println("Assignment Description: \n\n" + assignment.get("description"));
-                assignmentOutput.append("\"properties\": {\n\t" + "\"Name\": {\n\t\t" + "\"title\": [\n\t\t\t" + "{\n\t\t\t\t" + "           \"text\": {\n\t\t\t\t\t\t" + "\"content\": \"").append(assignment.get("name")).append("\"\n\t\t\t\t\t").append("}\n\t\t\t\t").append("        }").append("       ]\n\t\t\t").append("},").append("\"Notes\": {").append("\"rich_text\": [").append("{").append("\"text\": {").append("\"content\": \"").append(sanitizedAssignmentDescription).append("\"").append("}").append("}").append("]").append("},").append("\"Course\": {").append("\"select\": {").append("\"name\": \"").append(courseMap.get(Long.toString((long) assignment.get("course_id")))).append("\"").append("}").append("},").append("\"Dates\": {").append("\"date\": {").append("\"start\": \"").append(sanitizedAssignmentStartDate).append("\",").append("\"end\": \"").append(sanitizedAssignmentEndDate).append("\"").append("}").append("},").append("\"Task\": {").append("\"multi_select\": [").append("{").append("\"name\": \"").append(resolveAssignmentType((JSONArray) assignment.get("submission_types"))).append("\"").append( // i am pretty sure i need to fix this to ensure it parses the array properly.
-                        "}").append("]").append("}").append("}");
+                // holy chain append. gotta piece this out.
+                assignmentOutput
+                        .append(
+                        "\"properties\": {\n\t" + "\"Name\": {\n\t\t" + "\"title\": [\n\t\t\t" + "{\n\t\t\t\t" + "           \"text\": {\n\t\t\t\t\t\t" + "\"content\": \"")
+                        .append(assignment.get("name"))
+                        .append("\"\n\t\t\t\t\t")
+                        .append("}\n\t\t\t\t")
+                        .append("        }")
+                        .append("       ]\n\t\t\t")
+                        .append("},")
+                        .append("\"Notes\": {")
+                        .append("\"rich_text\": [")
+                        .append("{")
+                        .append("\"text\": {")
+                        .append("\"content\": \"")
+                        .append(sanitizedAssignmentDescription)
+                        .append("\"")
+                        .append("}")
+                        .append("}")
+                        .append("]")
+                        .append("},")
+                        .append("\"Course\": {")
+                        .append("\"select\": {")
+                        .append("\"name\": \"")
+                        .append(courseMap.get(Long.toString((long) assignment.get("course_id"))))
+                        .append("\"")
+                        .append("}")
+                        .append("},")
+                        .append("\"Dates\": {")
+                        .append("\"date\": {")
+                        .append("\"start\": \"")
+                        .append(sanitizedAssignmentStartDate)
+                        .append("\",")
+                        .append("\"end\": \"")
+                        .append(sanitizedAssignmentEndDate)
+                        .append("\"").append("}")
+                        .append("},")
+                        .append("\"Task\": {")
+                        .append("\"multi_select\": [")
+                        .append("{")
+                        .append("\"name\": \"")
+                        .append(resolveAssignmentType((JSONArray) assignment.get("submission_types")))
+                        .append("\"")
+                        .append( // i am pretty sure i need to fix this to ensure it parses the array properly.
+                        "}")
+                        .append("]")
+                        .append("}")
+                        .append("}");
 
                 assignments[i] = assignmentOutput.toString();
                 assignmentOutput.delete(0, assignmentOutput.length());
@@ -414,11 +460,9 @@ public class Main {
                 if (connection.getResponseCode() == 200) {
                     System.out.println("Notion Database Page Creation Request: Server Responded OK");
                     recieveResponseFromPOST(connection);
-                }
-                else if(connection.getResponseCode() == 401){
+                } else if (connection.getResponseCode() == 401) {
                     System.out.println("Notion said you were unauthorized to make that request. Is your token correct?\nToken: " + this.notionToken);
-                }
-                else {
+                } else {
                     System.out.println("Notion Page Creation Request: Server Responded: " + connection.getResponseCode() + "\t\t" + connection.getResponseMessage());
                     System.out.println("Payload: \n" + payload);
                 }
@@ -479,8 +523,8 @@ public class Main {
     private String captureResponse(HttpsURLConnection connection) {
         StringBuilder builder = new StringBuilder();
         String failureSignifier = "failed to capture response";
-        builder.append(failureSignifier);
-        try(BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()))){
+
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
             String input;
 
             while ((input = reader.readLine()) != null) {
@@ -488,13 +532,14 @@ public class Main {
             }
             reader.close();
             connection.disconnect();
-            builder.replace(0, failureSignifier.length(), "");
-        }
-        catch (IOException e) {
-            System.out.println(e.getMessage());
+
+        } catch (IOException e) {
+            System.out.println(
+                    "-> Encountered an error while reading response:\n" +
+                            e.getMessage());
+            System.out.println("Response Fragment:\n" + builder.toString());
             // Something went wrong while reading, ensure everything downstream knows it. Keep the failure signifier, remove everything else
-            if (builder.length() > failureSignifier.length())
-                builder.replace(failureSignifier.length(), builder.length(), "");
+            return failureSignifier;
         }
         return builder.toString();
     }
@@ -510,8 +555,9 @@ public class Main {
         return url;
     }
 
-    private int makeCoursesRequest(boolean writeCourseList) { // get a list of courses
+    private int makeCoursesRequest(boolean writeCourseList, boolean ping_flag) { // get a list of courses
         URL url = buildCoursesRequestURL();
+        int ret = 0;
         if (url != null) {
             HttpsURLConnection con = null;
             try {
@@ -525,47 +571,73 @@ public class Main {
                     if (writeCourseList) {
                         writeCourseToFile(response);
                     }
+                    if (ping_flag) {
+                        writeCoursesToSTDOUT(response);
+                    }
                     this.courseMap = mapCourseIDS(response);
                     //printFullCourseRequest(con);
-                }
-                else if(responseCode == 401){
+                } else if (responseCode == 401) {
                     System.out.println("The server said you are unauthorized to make this request. Is the canvas API token correct?\nToken: " + this.canvasToken);
-                }
-                else {
+                    System.out.println(response);
+                } else {
                     System.out.print("Courses Request failed. Server Responded with: " + response + " Program should exit now");
-                    return -1;
+                    ret = -1;
                 }
             } catch (IOException e) {
                 System.out.println("An IO error occurred while making a request to canvas's Get Courses endpoint. The program should exit now. ");
+                ret = -1;
             } finally {
                 con.disconnect();
             }
         }
-        return 0;
+        return ret;
     }
 
-    private HashMap<String, String> mapCourseIDS(String response) {
-        if (!response.equals("failure")) {
-            try {
-                // parse the response, print relevant data
-                JSONParser parser = new JSONParser();
-                JSONArray courses = (JSONArray) parser.parse(response);
-                int numCourses = courses.size();
-                Iterator<JSONObject> iterator = courses.iterator();
-                HashMap<String, String> courseIDNameMap = new HashMap<>();
-                int i = 0;
-                String[] courseIds = new String[numCourses];
-                while (iterator.hasNext()) { // this should implicitly prevent array overruns;
-                    JSONObject course = iterator.next();
-                    if (course.containsKey("access_restricted_by_date")) {
-                        courseIds[i] = "null";
-                        i++;
-                    }
-                    else{
-                        courseIDNameMap.put(Long.toString((long) course.get("id")), (String) course.get("name"));
-                        // cache the ids
-                         courseIds[i] = String.valueOf(course.get("id"));
-                         i++;
+    private void writeCoursesToSTDOUT(String response) {
+        try {
+            // parse the response, print relevant data
+            JSONParser parser = new JSONParser();
+            JSONArray courses = (JSONArray) parser.parse(response);
+            int numCourses = courses.size();
+            Iterator<JSONObject> iterator = courses.iterator();
+
+            int i = 0;
+            String[] courseIds = new String[numCourses];
+            while (iterator.hasNext()) { // this should implicitly prevent array overruns;
+                JSONObject course = iterator.next();
+                if (course.containsKey("access_restricted_by_date")) {
+                    courseIds[i] = "null";
+                    i++;
+                } else {
+                    System.out.print(course.get("id") + ":" + course.get("name"));
+                }
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+    }
+
+        private HashMap<String, String> mapCourseIDS(String response){
+            if (!response.equals("failure")) {
+                try {
+                    // parse the response, print relevant data
+                    JSONParser parser = new JSONParser();
+                    JSONArray courses = (JSONArray) parser.parse(response);
+                    int numCourses = courses.size();
+                    Iterator<JSONObject> iterator = courses.iterator();
+                    HashMap<String, String> courseIDNameMap = new HashMap<>();
+                    int i = 0;
+                    String[] courseIds = new String[numCourses];
+                    while (iterator.hasNext()) { // this should implicitly prevent array overruns;
+                        JSONObject course = iterator.next();
+                        if (course.containsKey("access_restricted_by_date")) {
+                            courseIds[i] = "null";
+                            i++;
+                        } else {
+                            courseIDNameMap.put(Long.toString((long) course.get("id")), (String) course.get("name"));
+                            // cache the ids
+                            courseIds[i] = String.valueOf(course.get("id"));
+                            i++;
                         /*
                         if(i < numCourses){
                             System.out.println(String.valueOf(course.get("id")));
@@ -574,42 +646,42 @@ public class Main {
                         */
 
 
+                        }
+
                     }
-
+                    this.courseIDs = courseIds;
+                    return courseIDNameMap;
+                } catch (ParseException e) {
+                    throw new RuntimeException(e);
                 }
-                this.courseIDs = courseIds;
-                return courseIDNameMap;
-            } catch (ParseException e) {
-                throw new RuntimeException(e);
+            }
+            return null;
+        }
+
+        private void writeCourseToFile (String response){
+            //loads course data. Should grab IDS and insert them into a Map. id:course name.
+            if (!response.equals("failure")) {
+                try {
+
+                    // parse the response, print relevant data
+                    JSONParser parser = new JSONParser();
+                    JSONArray courses = (JSONArray) parser.parse(response);
+                    Iterator<JSONObject> iterator = courses.iterator();
+                    BufferedWriter writer = new BufferedWriter(new FileWriter(new File(System.getProperty("user.dir") + "\\src\\main\\resources\\courses.txt"))); // todo complete writing course names and IDS to file
+
+                    while (iterator.hasNext()) {
+                        JSONObject course = iterator.next();
+                        if (course.containsKey("access_restricted_by_date"))
+                            writer.write("Access Restricted By Date:" + (long) course.get("id") + "\n");
+                        else
+                            writer.write((String) course.get("name") + ":" + (long) course.get("id") + "\n");
+                    }
+                    writer.close();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                } catch (ParseException e) {
+                    throw new RuntimeException(e);
+                }
             }
         }
-        return null;
     }
-
-    private void writeCourseToFile(String response) {
-        //loads course data. Should grab IDS and insert them into a Map. id:course name.
-        if (!response.equals("failure")) {
-            try {
-
-                // parse the response, print relevant data
-                JSONParser parser = new JSONParser();
-                JSONArray courses = (JSONArray) parser.parse(response);
-                Iterator<JSONObject> iterator = courses.iterator();
-                BufferedWriter writer = new BufferedWriter(new FileWriter(new File(System.getProperty("user.dir") + "\\src\\main\\resources\\courses.txt"))); // todo complete writing course names and IDS to file
-
-                while (iterator.hasNext()) {
-                    JSONObject course = iterator.next();
-                    if (course.containsKey("access_restricted_by_date"))
-                        writer.write("Access Restricted By Date:" + (long) course.get("id") + "\n");
-                    else
-                        writer.write((String) course.get("name") + ":" + (long) course.get("id") + "\n");
-                }
-                writer.close();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            } catch (ParseException e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
-}
