@@ -6,7 +6,7 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0c76ec5c-439c-4475-8f35-d13a6a8e94c9" name="Changes" comment="attempted to add command line interpretation. problem: apache commons CLI and json-simple have a conflicting class: ParseException.java. &#10;Fix: Roll my own CLI. It just needs to be basic. If it turns out I need an actual parser, I'll make the switch.">
+    <list default="true" id="0c76ec5c-439c-4475-8f35-d13a6a8e94c9" name="Changes" comment="added functionality: using system environment variables">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/Spot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Spot.java" afterDir="false" />
@@ -29,7 +29,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="fix_request_property_written_as_null" />
+        <entry key="$PROJECT_DIR$" value="refactor_functionality" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -59,7 +59,7 @@
     &quot;ASKED_MARK_IGNORED_FILES_AS_EXCLUDED&quot;: &quot;true&quot;,
     &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
     &quot;last_opened_file_path&quot;: &quot;C:/Users/timef/Documents/Codebases/Java/libraries/json-simple-1.1.1.jar&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Artifacts&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Libraries&quot;,
     &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
     &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;
   }
@@ -74,7 +74,7 @@
       <recent name="C:\Users\timef\Documents\Workspaces\Java\canvas-api\src\main\resources" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.Test CLI - Chaining flags">
+  <component name="RunManager" selected="Application.Test CLI - Using Environment Variables">
     <configuration name="Run" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="main.java.Main" />
       <module name="canvas-api" />
@@ -106,6 +106,19 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="Test CLI - Using Environment Variables" type="Application" factoryName="Application">
+      <envs>
+        <env name="CANVASTOKEN" value="11299~yK7VGyALmHfauH4wFP2HB37rkXR6CruwWuz2B7nTRVtcw62UrWQ3nxYCBW8XrXPk" />
+        <env name="DATABASEID" value="1640fbf16b3681c2a86eeed9accde2c6" />
+        <env name="NOTIONTOKEN" value="secret_wY51VUKUCno5QvCrhb9HBnsuiIzm2bBNXqMqsVl8J4s" />
+      </envs>
+      <option name="MAIN_CLASS_NAME" value="main.java.Main" />
+      <module name="canvas-api" />
+      <option name="PROGRAM_PARAMETERS" value="-e" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="Test CLI - help" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="main.java.Main" />
       <module name="canvas-api" />
@@ -120,6 +133,7 @@
       <item itemvalue="Application.Test CLI - Notion Token" />
       <item itemvalue="Application.Test CLI - Notion DB ID" />
       <item itemvalue="Application.Test CLI - Chaining flags" />
+      <item itemvalue="Application.Test CLI - Using Environment Variables" />
     </list>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
@@ -292,7 +306,35 @@
       <option name="project" value="LOCAL" />
       <updated>1737051986836</updated>
     </task>
-    <option name="localTasksCounter" value="24" />
+    <task id="LOCAL-00024" summary="added rudimentary CLI">
+      <created>1737160461918</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1737160461918</updated>
+    </task>
+    <task id="LOCAL-00025" summary="updated help printout">
+      <created>1737247867373</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1737247867373</updated>
+    </task>
+    <task id="LOCAL-00026" summary="changed to using system environment variables">
+      <created>1737248596182</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1737248596182</updated>
+    </task>
+    <task id="LOCAL-00027" summary="added functionality: using system environment variables">
+      <created>1737250920559</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1737250920559</updated>
+    </task>
+    <option name="localTasksCounter" value="28" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -363,7 +405,11 @@
     <MESSAGE value="fixed request not working." />
     <MESSAGE value="bad patch: fixed stream prematurely closing.&#10;need to handle connections better." />
     <MESSAGE value="minor changes: improved resource handling of Response Reader" />
-    <option name="LAST_COMMIT_MESSAGE" value="minor changes: improved resource handling of Response Reader" />
+    <MESSAGE value="added rudimentary CLI" />
+    <MESSAGE value="updated help printout" />
+    <MESSAGE value="changed to using system environment variables" />
+    <MESSAGE value="added functionality: using system environment variables" />
+    <option name="LAST_COMMIT_MESSAGE" value="added functionality: using system environment variables" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -372,11 +418,6 @@
           <properties class="java.lang.NullPointerException" package="java.lang" />
           <option name="timeStamp" value="1" />
         </breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/Main.java</url>
-          <line>371</line>
-          <option name="timeStamp" value="2" />
-        </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
   </component>
