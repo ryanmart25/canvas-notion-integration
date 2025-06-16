@@ -2,6 +2,7 @@ package main.java;
 
 import javax.net.ssl.HttpsURLConnection;
 import java.io.*;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
@@ -40,17 +41,24 @@ public class Main {
                                     "    -n  pass a Notion API token to use in place of the token specified in the environment variables.\n" +
                                     "    -c  pass a canvas api token to use in place of the token specified in the environment variables.\n" +
                                     "    -e  use environment variables for Database ID and API tokens.\n" +
+                                    "    -f  fetch database schema and print to stdout. must use environment variables" +
                                     "\tFormat:\n" +
                                     "\t'NOTIONTOKEN=<token>'\n" +
                                     "\t'CANVASTOKEN=<token>'\n" +
                                     "\t'DATABASEID=<database ID>'" +
                                     "    -h  print the help message.");
                     return;
+                } else if(args[i].equals("-f")){
+                    System.out.println("HIT");
+                    main.loadSecrets(main);
+                    System.out.println("HIT");
+                  main.fetchSchema(main.databaseID, main.notionToken);
+                  return;
                 } else if (args[i].equals("-e") && args.length == 1) {
                     System.out.println("Using environment variables.");
                     main.loadSecrets(main);
                 } else if (args[i].equals("-d") && i < args.length - 1) {
-                    System.out.println("Using notion database ID: " + args[i + 1]);
+                    System.out.println("HITUsing notion database ID: " + args[i + 1]);
                     main.databaseID = args[i + 1];
                 } else if (args[i].equals("-c") && i < args.length - 1) {
                     System.out.println("Using Canvas API Token: " + args[i + 1]);
@@ -59,7 +67,7 @@ public class Main {
                     System.out.println("Using Notion API Token: " + args[i + 1]);
                     main.notionToken = args[i + 1];
                 } else {
-                    System.out.println("Flags not recognized, too many, or user failed to pass a value properly.");
+                    System.out.println("Flags not recognized, too many flags, or user failed to pass a value properly.");
                     return;
                 }
 
@@ -70,53 +78,100 @@ public class Main {
                     continue;
                 }
                 URL url = main.buildAssignmentRequestURL(main.courseIDs[i]);
+                if(url == null)
+                    continue;
                 InputStream inputStream = main.makeAssignmentRequest(url);
                 if (inputStream == null) { // feels like a shitty way to do this
                     continue;
                 }
-                String request = main.readAssignmentRequest(inputStream);
+                String request = main.captureAssignmentRequest(inputStream);
                 String[] assignmentsProperties = main.parseAssignmentProperties(request);
                 for (int j = 0; j < main.assignmentCount; j++) {
                     String notionCreatePagePayload = main.buildPageCreationPayload(assignmentsProperties[j]);
-                    //System.out.println(notionCreatePagePayload);
                     main.makeNotionPageCreationRequest(notionCreatePagePayload, main.notionToken);
-
                 }
-                //System.out.println(compiledAssignments);
             }
         } else {
-
-            //Scanner scanner = new Scanner(System.in);
-            //Specifies what the user would like to do.
-            // 1. "All Courses" prints a list of currently enrolled courses
-            // 2. "<name of course>" prints a list of assignments for a specific course
-            //String which = scanner.nextLine();
             main.makeCoursesRequest(false, false);
             for (int i = 0; i < main.courseIDs.length; i++) {
                 if (main.courseIDs[i].equals("null")) {
                     continue;
                 }
                 URL url = main.buildAssignmentRequestURL(main.courseIDs[i]);
+                if(url == null)
+                    continue;
                 InputStream inputStream = main.makeAssignmentRequest(url);
-                if (inputStream == null) { // feels like a shitty way to do this
+                if (inputStream == null) {
                     continue;
                 }
-                String request = main.readAssignmentRequest(inputStream);
+                String request = main.captureAssignmentRequest(inputStream);
                 String[] assignmentsProperties = main.parseAssignmentProperties(request);
                 for (int j = 0; j < main.assignmentCount; j++) {
                     String notionCreatePagePayload = main.buildPageCreationPayload(assignmentsProperties[j]);
-                    //System.out.println(notionCreatePagePayload);
                     main.makeNotionPageCreationRequest(notionCreatePagePayload, main.notionToken);
-
                 }
-                //System.out.println(compiledAssignments);
             }
         }
-
-
-        // main.exit();
     }
+    private JSONObject fetchSchema(String databaseID, String authenticationToken){
 
+        try {
+            URL fetchDatabase = new URL("https://api.notion.com/v1/databases/" + databaseID);
+            HttpsURLConnection connection = null;
+            try{
+                connection = (HttpsURLConnection) fetchDatabase.openConnection();
+                connection.setRequestMethod("GET");
+                connection.setRequestProperty("Authorization", "Bearer " + authenticationToken);
+                connection.setRequestProperty("Content-Type", "application/json");
+                connection.setRequestProperty("Notion-Version", "2022-06-28");
+
+                if(connection.getResponseCode() == HttpsURLConnection.HTTP_OK){
+                    try(BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()))){
+                        JSONParser parser = new JSONParser();
+                        JSONObject response = (JSONObject) parser.parse(reader);
+                        return (JSONObject) response.get("properties");
+                    } catch (ParseException e) {
+                        System.out.println("Failed to parse your databases' schema. Perhaps Notion gave bad data?");
+                    }
+                }
+                else{
+                    try(BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()))){
+                        StringBuilder responseCapture = new StringBuilder();
+                        String ret = "";
+                        while((ret = reader.readLine()) != null)
+                            responseCapture.append(ret);
+                        System.out.println(responseCapture);
+                    }
+                    System.out.println("Schema fetch failed. Do you have permission to view that database?" );
+                }
+            }catch (IOException e){
+                System.out.println("Connection closed unexpectedly: " + e.getMessage());
+            }
+            finally{
+                if(connection != null){
+                    connection.disconnect();
+                }
+            }
+
+        } catch (MalformedURLException e) {
+            System.out.println("URL Invalid. Typo?");
+        }
+
+        return null;
+    }
+    /*private String buildPayloadFromSchema(JSONObject propertiesObject){
+
+        Attempts to dynamically modify the payload of POSTs to Notion endpoints.
+
+        StringBuilder builder = new StringBuilder();
+        for(Object key : propertiesObject.keySet()){
+            String type = (String) ((JSONObject) propertiesObject.get(key)).get("type");
+            switch (type.toLowerCase()){
+                case "checkbox":
+                    builder.append(key.toString());
+            }
+        }
+    }*/
     private void loadSecrets(Main obj) {
 
         obj.canvasToken = System.getenv("CANVASTOKEN");
@@ -125,11 +180,11 @@ public class Main {
     }
 
     private URL buildAssignmentRequestURL(String courseid) {
-        URL url;
+        URL url = null;
         try {
             url = new URL("https://canvas.instructure.com/api/v1/courses/" + courseid + "/assignments");
         } catch (MalformedURLException e) {
-            throw new RuntimeException(e);
+            System.out.println("URL for Canvas assignment request for course #: " + courseid + " is invalid.");
         }
         return url;
     }
@@ -141,21 +196,22 @@ public class Main {
             connection = (HttpsURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
             connection.setRequestProperty("Authorization", "Bearer " + canvasToken);
-            if (connection.getResponseCode() == 200) {
-                InputStream stream = connection.getInputStream();
+            if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
 
-                return stream;
+                return connection.getInputStream();
             } else {
                 System.out.println("Assignment Request: Server Responded with: " + connection.getResponseCode() + "\n" + connection.getResponseMessage());
                 System.out.println(url.toString());
             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            System.out.println("Connection was closed unexpectedly. " + e.getMessage());
+            return null;
         }
         return null;
     }
 
-    private String readAssignmentRequest(InputStream is) { // research needed on how to best handle the stream.
+    private String captureAssignmentRequest(InputStream is) { // research needed on how to best handle the stream. //todo
+
         BufferedReader reader = new BufferedReader(new InputStreamReader(is));
         String input;
         StringBuilder fullinput = new StringBuilder();
@@ -172,11 +228,10 @@ public class Main {
     }
 
     private String sanitizeDescription(String unsanitized) {
-        String sanitized = unsanitized.replaceAll(Spot.ASSIGNMENTDESCRIPTIONREGEX, Spot.ASSIGNMENTDESCRIPTIONREGEXREPLACEMENT);
-        return sanitized;
+        return unsanitized.replaceAll(Spot.ASSIGNMENTDESCRIPTIONREGEX, Spot.ASSIGNMENTDESCRIPTIONREGEXREPLACEMENT);
     }
 
-    private String[] parseAssignmentProperties(String unparsed) { //
+    private String[] parseAssignmentProperties(String unparsed) {
         JSONParser parser = new JSONParser();
         StringBuilder assignmentOutput = new StringBuilder();
 
@@ -520,28 +575,21 @@ public class Main {
         }
     }
 
-    private String captureResponse(HttpsURLConnection connection) {
-        StringBuilder builder = new StringBuilder();
-        String failureSignifier = "failed to capture response";
-
+    private JSONObject captureResponse(HttpsURLConnection connection) {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
-            String input;
-
-            while ((input = reader.readLine()) != null) {
-                builder.append(input);
+            try {
+                return (JSONObject) new JSONParser().parse(reader);
+            } catch (ParseException e) {
+                System.out.println("Couldn't parse response from courses request.");
+            }finally {
+                connection.disconnect();
             }
-            reader.close();
             connection.disconnect();
-
         } catch (IOException e) {
-            System.out.println(
-                    "-> Encountered an error while reading response:\n" +
-                            e.getMessage());
-            System.out.println("Response Fragment:\n" + builder.toString());
+            System.out.println("-> Encountered an error while reading response:\n" + e.getMessage());
             // Something went wrong while reading, ensure everything downstream knows it. Keep the failure signifier, remove everything else
-            return failureSignifier;
         }
-        return builder.toString();
+        return null;
     }
 
     private URL buildCoursesRequestURL() {
@@ -566,28 +614,29 @@ public class Main {
                 String token = canvasToken;
                 con.setRequestProperty("Authorization", "Bearer " + token);
                 int responseCode = con.getResponseCode();
-                String response = captureResponse(con);
-                if (responseCode == 200) {
+                JSONObject response= captureResponse(con);
+                if (responseCode == HttpsURLConnection.HTTP_OK && response != null) {
                     if (writeCourseList) {
-                        writeCourseToFile(response);
+                        writeCourseToFile(response.toJSONString());
                     }
                     if (ping_flag) {
-                        writeCoursesToSTDOUT(response);
+                        writeCoursesToSTDOUT(response.toJSONString());
                     }
                     this.courseMap = mapCourseIDS(response);
                     //printFullCourseRequest(con);
-                } else if (responseCode == 401) {
+                } else if (responseCode == HttpsURLConnection.HTTP_FORBIDDEN) {
                     System.out.println("The server said you are unauthorized to make this request. Is the canvas API token correct?\nToken: " + this.canvasToken);
                     System.out.println(response);
                 } else {
-                    System.out.print("Courses Request failed. Server Responded with: " + response + " Program should exit now");
-                    ret = -1;
+                    System.out.print("Courses Request failed. Server Responded with: "+ con.getResponseMessage());
+                    return -1;
                 }
             } catch (IOException e) {
                 System.out.println("An IO error occurred while making a request to canvas's Get Courses endpoint. The program should exit now. ");
                 ret = -1;
             } finally {
-                con.disconnect();
+                if(con != null)
+                    con.disconnect();
             }
         }
         return ret;
@@ -595,7 +644,7 @@ public class Main {
 
     private void writeCoursesToSTDOUT(String response) {
         try {
-            // parse the response, print relevant data
+            // write course IDs and names to stdout. not much use.
             JSONParser parser = new JSONParser();
             JSONArray courses = (JSONArray) parser.parse(response);
             int numCourses = courses.size();
@@ -617,12 +666,13 @@ public class Main {
         }
     }
 
-        private HashMap<String, String> mapCourseIDS(String response){
+        private HashMap<String, String> mapCourseIDS(JSONObject response){
+            // associates course IDs with course names, stores in a Map.
             if (!response.equals("failure")) {
                 try {
                     // parse the response, print relevant data
                     JSONParser parser = new JSONParser();
-                    JSONArray courses = (JSONArray) parser.parse(response);
+                    JSONArray courses = (JSONArray) parser.parse(response.toJSONString());
                     int numCourses = courses.size();
                     Iterator<JSONObject> iterator = courses.iterator();
                     HashMap<String, String> courseIDNameMap = new HashMap<>();
@@ -638,14 +688,6 @@ public class Main {
                             // cache the ids
                             courseIds[i] = String.valueOf(course.get("id"));
                             i++;
-                        /*
-                        if(i < numCourses){
-                            System.out.println(String.valueOf(course.get("id")));
-
-                        }
-                        */
-
-
                         }
 
                     }
@@ -659,15 +701,13 @@ public class Main {
         }
 
         private void writeCourseToFile (String response){
-            //loads course data. Should grab IDS and insert them into a Map. id:course name.
+            // writes course IDs for caching on disk.
             if (!response.equals("failure")) {
                 try {
-
-                    // parse the response, print relevant data
                     JSONParser parser = new JSONParser();
                     JSONArray courses = (JSONArray) parser.parse(response);
                     Iterator<JSONObject> iterator = courses.iterator();
-                    BufferedWriter writer = new BufferedWriter(new FileWriter(new File(System.getProperty("user.dir") + "\\src\\main\\resources\\courses.txt"))); // todo complete writing course names and IDS to file
+                    BufferedWriter writer = new BufferedWriter(new FileWriter(new File(System.getProperty("user.dir") + "\\src\\main\\resources\\courses.txt")));
 
                     while (iterator.hasNext()) {
                         JSONObject course = iterator.next();
