@@ -9,7 +9,6 @@
     <list default="true" id="0c76ec5c-439c-4475-8f35-d13a6a8e94c9" name="Changes" comment="added functionality: using system environment variables">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Spot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Spot.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -74,10 +73,23 @@
       <recent name="C:\Users\timef\Documents\Workspaces\Java\canvas-api\src\main\resources" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.Test CLI - Using Environment Variables">
+  <component name="RunManager" selected="Application.Test CLI - -f">
     <configuration name="Run" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="main.java.Main" />
       <module name="canvas-api" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Test CLI - -f" type="Application" factoryName="Application">
+      <envs>
+        <env name="CANVASTOKEN" value="11299~yK7VGyALmHfauH4wFP2HB37rkXR6CruwWuz2B7nTRVtcw62UrWQ3nxYCBW8XrXPk" />
+        <env name="DATABASEID" value="1640fbf16b3681c2a86eeed9accde2c6" />
+        <env name="NOTIONTOKEN" value="secret_wY51VUKUCno5QvCrhb9HBnsuiIzm2bBNXqMqsVl8J4s" />
+      </envs>
+      <option name="MAIN_CLASS_NAME" value="main.java.Main" />
+      <module name="canvas-api" />
+      <option name="PROGRAM_PARAMETERS" value="-f" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -129,11 +141,12 @@
     </configuration>
     <list>
       <item itemvalue="Application.Run" />
-      <item itemvalue="Application.Test CLI - help" />
-      <item itemvalue="Application.Test CLI - Notion Token" />
-      <item itemvalue="Application.Test CLI - Notion DB ID" />
       <item itemvalue="Application.Test CLI - Chaining flags" />
+      <item itemvalue="Application.Test CLI - Notion DB ID" />
+      <item itemvalue="Application.Test CLI - Notion Token" />
       <item itemvalue="Application.Test CLI - Using Environment Variables" />
+      <item itemvalue="Application.Test CLI - -f" />
+      <item itemvalue="Application.Test CLI - help" />
     </list>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
@@ -334,7 +347,14 @@
       <option name="project" value="LOCAL" />
       <updated>1737250920559</updated>
     </task>
-    <option name="localTasksCounter" value="28" />
+    <task id="LOCAL-00028" summary="added functionality: using system environment variables">
+      <created>1744499258832</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1744499258832</updated>
+    </task>
+    <option name="localTasksCounter" value="29" />
     <servers />
   </component>
   <component name="UnknownFeatures">
